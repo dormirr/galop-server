@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>account-module</module>
+        <module>common-module</module>
         <module>core-module</module>
     </modules>
 

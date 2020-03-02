@@ -19,8 +19,8 @@
     <properties>
         <java.version>11</java.version>
         <druid.version>1.1.21</druid.version>
+        <jjwt.version>0.11.0</jjwt.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
-        <jjwt.version>0.10.7</jjwt.version>
         <captcha.version>1.6.2</captcha.version>
     </properties>
 
@@ -47,11 +47,57 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- JWT -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- MapStruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- 验证码 -->
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
             <version>${captcha.version}</version>
+        </dependency>
+
+        <!-- 项目模块依赖 -->
+        <dependency>
+            <groupId>cn.dormirr</groupId>
+            <artifactId>common-module</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <!-- Test -->
