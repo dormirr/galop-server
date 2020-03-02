@@ -1,4 +1,4 @@
-package cn.dormirr.coremodule.domain;
+package cn.dormirr.coremodule.role.domain;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;

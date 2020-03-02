@@ -1,6 +1,6 @@
-package cn.dormirr.coremodule.repository;
+package cn.dormirr.coremodule.role.repository;
 
-import cn.dormirr.coremodule.domain.User;
+import cn.dormirr.coremodule.role.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
