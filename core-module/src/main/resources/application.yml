@@ -30,14 +30,7 @@ spring:
       testOnReturn: true
 
       # 监控
-      filters: stat,wall
-      stat-view-servlet:
-        url-pattern: /druid/*
-        reset-enable: false
-
-      web-stat-filter:
-        url-pattern: /*
-        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+      filters: stat,wall,slf4j
 
   jpa:
     show-sql: true
