@@ -8,6 +8,7 @@ import java.util.Objects;
  * @author ZhangTianCi
  */
 @Entity
+@Table(schema = "public")
 public class User {
     private Long id;
     private Timestamp createTime;
@@ -71,7 +72,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "user_password", nullable = false, length = 16)
+    @Column(name = "user_password", nullable = false, length = 172)
     public String getUserPassword() {
         return userPassword;
     }
