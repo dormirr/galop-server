@@ -1,16 +1,11 @@
 package cn.dormirr.coremodule.role.domain;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-/**
- * @author ZhangTianCi
- */
 @Entity
+@Table(schema = "galop")
 public class Role {
     private Long id;
     private Timestamp createTime;

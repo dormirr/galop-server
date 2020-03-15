@@ -4,11 +4,8 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-/**
- * @author ZhangTianCi
- */
 @Entity
-@Table(schema = "public")
+@Table(schema = "galop")
 public class User {
     private Long id;
     private Timestamp createTime;
