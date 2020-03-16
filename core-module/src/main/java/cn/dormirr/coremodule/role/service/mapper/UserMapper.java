@@ -1,5 +1,6 @@
 package cn.dormirr.coremodule.role.service.mapper;
 
+import cn.dormirr.commonmodule.base.BaseMapper;
 import cn.dormirr.coremodule.role.domain.User;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import org.mapstruct.Mapper;
