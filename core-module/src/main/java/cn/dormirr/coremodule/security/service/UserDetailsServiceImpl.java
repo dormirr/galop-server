@@ -1,9 +1,9 @@
 package cn.dormirr.coremodule.security.service;
 
+import cn.dormirr.commonmodule.exception.BadRequestException;
 import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.security.security.vo.JwtUser;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDto userDto = userService.findByUserNumber(userNumber);
         if (userDto == null) {
-            //TODO 抛出账号不存在异常
+            throw new BadRequestException("账号或密码错误");
         }
 
         return createJwtUser(userDto);
