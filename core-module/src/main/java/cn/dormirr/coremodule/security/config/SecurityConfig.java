@@ -22,7 +22,7 @@ import org.springframework.web.filter.CorsFilter;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
@@ -86,11 +86,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 测试
                 .antMatchers("/role/hello").permitAll()
                 // 授权
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/auth/login").permitAll()
+                // 退出
+                .antMatchers("/auth/logout").permitAll()
+                // 头像
+                .antMatchers("/avatar/**").permitAll()
 
                 // 其他请求都需要认证
                 .anyRequest()
-                .authenticated();
+                .authenticated()
+                .and().apply(securityConfigurerAdapter());
     }
 
     private TokenConfigurer securityConfigurerAdapter() {
