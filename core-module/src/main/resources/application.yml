@@ -37,58 +37,32 @@ spring:
     open-in-view: true
     hibernate:
       ddl-auto: update
-#
-#  data:
-#    redis:
-#      repositories:
-#        enabled: true
-#  redis:
-#    # 数据库索引
-#    database: 0
-#    host: 127.0.0.1
-#    port: 6379
-#    password:
-#    # 连接超时时间
-#    timeout: 5000
-#
-## 邮箱验证码有效时间/分钟
-#code:
-#  expiration: 5
-#
-## 登录图形验证码有效时间/分钟
-#loginCode:
-#  expiration: 2
-#
-## 密码加密传输，前端公钥加密，后端私钥解密
-#rsa:
-#  private_key: MIIBUwIBADANBgkqhkiG9w0BAQEFAASCAT0wggE5AgEAAkEA0vfvyTdGJkdbHkB8mp0f3FE0GYP3AYPaJF7jUd1M0XxFSE2ceK3k2kw20YvQ09NJKk+OMjWQl9WitG9pB6tSCQIDAQABAkA2SimBrWC2/wvauBuYqjCFwLvYiRYqZKThUS3MZlebXJiLB+Ue/gUifAAKIg1avttUZsHBHrop4qfJCwAI0+YRAiEA+W3NK/RaXtnRqmoUUkb59zsZUBLpvZgQPfj1MhyHDz0CIQDYhsAhPJ3mgS64NbUZmGWuuNKp5coY2GIj/zYDMJp6vQIgUueLFXv/eZ1ekgz2Oi67MNCk5jeTF2BurZqNLR3MSmUCIFT3Q6uHMtsB9Eha4u7hS31tj1UWE+D+ADzp59MGnoftAiBeHT7gDMuqeJHPL4b+kC+gzV4FGTfhR9q3tTbklZkD2A==
-#
-## jwt
-#jwt:
-#  header: Authorization
-#
-#  # 令牌前缀
-#  token-start-with: Bearer
-#
-#  # 必须使用最少 88 位的 Base64 对该令牌进行编码
-#  base64-secret: ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFjZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=
-#
-#  # 令牌过期时间 此处单位/毫秒 ，默认 2 小时，可在此网站生成 https://www.convertworld.com/zh-hans/time/milliseconds.html
-#  token-validity-in-seconds: 7200000
-#
-#  # 在线用户 key
-#  online-key: online-token
-#
-#  # 验证码
-#  code-key: code-key
-#
-## 文件存储路径
-#file:
-#  path: D:\IdeaProjects\galop-server\file\
-#  avatar: D:\IdeaProjects\galop-server\avatar\
-#  # 文件大小 /M
-#  maxSize: 100
-#  avatarMaxSize: 5# jwt
+
+  data:
+    redis:
+      repositories:
+        enabled: true
+  redis:
+    # 数据库索引
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    # 连接超时时间
+    timeout: 5000
+
+# 邮箱验证码有效时间/分钟
+code:
+  expiration: 5
+
+# 登录图形验证码有效时间/分钟
+loginCode:
+  expiration: 2
+
+# 密码加密传输，前端公钥加密，后端私钥解密
+rsa:
+  private_key: MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAN03W5qmtoEYjrJp+7m0eUqmlDE0AJAn0APicG734C9y584Ucph9rjOU3b7Hy4T5S0NuVtpP9VIGQtfVRZGM9IHcQZf7ZVpvEVLMgka7g/L1D4rgzuCXP/6ev4VpPDDYTEywP+0e2ZoWCMBOMI/jLgRNcsQxUtRZnG0LYoeyxIbPAgMBAAECgYEAi1rlLQ5aqAaVVhVnyzvCsOExN7G/rRA3fUr3cyBZrOpg1rSQ4DlENSBRdG6ead01qXvn4M1ACHUDRL4IfkFigQQDE6jlday8of1SDmhbloCOfipjiQJrUIKAyrOYklsTsM3zGxq1FK1sdINRfQQQrBV7NRi7hAJwPyw+J1geSgkCQQD2VlJW9zwX3azJSshscPk4eS2Xn8Pyng9urm6zlAddCMW7dk36USur7OEWQh2pMPsTPDMqwrlh5tI0x+sUsExTAkEA5eTGkDPQp+J4JUJFpk0A5DkQDKjuKYUWsbYQ30smfRrppOc66gVjLoSz+1GQW+V1ra0qZYY8Op7hngz2mhAsFQJAW/UzfbWDoGEnTGl3UkwGLRfHdk+05VAt8KJ7Ptxmt0s8DVQHngdJJ0Ahcp6x1eQsBi016KOScsKo+/0Ze7qocwJBAIUltE8ug2nIw7coo/hGXv7PgdkjOhT4DQXOIgWBnAAXRz0H41pI1oHJwAgN3GMtCbQWOBjm3xlAjgGhFm5ycWUCQQDcmzLfyl2UgfPzMgb0VVOUfqJkrJbxH5a6ywGoFn7SlMhxbaiUl7Q2FkSSs7yU9SoOratfUET1dzZVwMoRoyHW
+# jwt
 jwt:
   header: Authorization
 
@@ -103,3 +77,15 @@ jwt:
 
   # 在线用户 key
   online-key: online-token
+
+  # 验证码
+  code-key: code-key
+
+# 文件存储路径
+file:
+  path: D:\IdeaProjects\galop-server\file\
+  avatar: D:\IdeaProjects\galop-server\avatar\
+
+  # 文件大小 /M
+  maxSize: 100
+  avatarMaxSize: 5
