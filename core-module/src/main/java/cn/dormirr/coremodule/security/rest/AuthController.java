@@ -12,6 +12,7 @@ import com.wf.captcha.ArithmeticCaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -66,11 +67,10 @@ public class AuthController {
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        
         // 生成令牌
         String token = tokenProvider.createToken(authentication);
         final JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
-        System.out.println(token);
 
         // 保存在线信息
         onlineUserService.save(jwtUser, token, request);
@@ -78,7 +78,6 @@ public class AuthController {
         // 返回 token 与 用户信息
         Map<String, Object> authInfo = new HashMap<String, Object>(2) {{
             put("token", properties.getTokenStartWith() + token);
-            put("user", jwtUser);
             put("status", "ok");
         }};
 
@@ -94,6 +93,7 @@ public class AuthController {
      * 获取用户信息
      */
     @GetMapping(value = "/info")
+    @PreAuthorize("hasAnyAuthority('老师','学生')")
     public ResponseEntity<Object> getUserInfo() {
         JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(SecurityUtils.getUsername());
         return ResponseEntity.ok(jwtUser);
