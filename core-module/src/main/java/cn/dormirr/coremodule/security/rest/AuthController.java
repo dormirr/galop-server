@@ -75,8 +75,9 @@ public class AuthController {
         onlineUserService.save(jwtUser, token, request);
 
         // 返回 Token 与 用户信息
-        Map<String, Object> authInfo = new HashMap<>(2) {{
+        Map<String, Object> authInfo = new HashMap<>(3) {{
             put("token", properties.getTokenStartWith() + token);
+            put("authority",jwtUser.getRoleByRoleId().getRoleName());
             put("status", 200);
         }};
 
