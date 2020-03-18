@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Jwt参数配置
+ * Jwt 参数配置
  *
  * @author ZhangTianCi
  */

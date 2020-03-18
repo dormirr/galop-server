@@ -1,9 +1,7 @@
 package cn.dormirr.coremodule.security.security.vo;
 
 import cn.dormirr.coremodule.role.domain.Role;
-import cn.dormirr.coremodule.role.domain.User;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
