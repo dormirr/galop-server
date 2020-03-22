@@ -14,7 +14,7 @@ public interface RoleMapper extends BaseMapper<RoleDto, Role> {
     /**
      * DTO 转实体
      *
-     * @param roleDto DTO
+     * @param roleDto RoleDTO
      * @return 实体
      */
     @Override

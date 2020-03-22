@@ -2,8 +2,6 @@ package cn.dormirr.coremodule.role.service.dto;
 
 import lombok.Data;
 
-import java.sql.Timestamp;
-
 /**
  * @author ZhangTianCi
  */

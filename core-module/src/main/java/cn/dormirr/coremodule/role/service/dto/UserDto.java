@@ -10,7 +10,6 @@ import java.io.Serializable;
  */
 @Data
 public class UserDto implements Serializable {
-
     private Long id;
     private String userNumber;
     private String userName;
@@ -19,5 +18,4 @@ public class UserDto implements Serializable {
     private String userPortrait;
     private Integer userFightingCapacity;
     private Role roleByRoleId;
-
 }
