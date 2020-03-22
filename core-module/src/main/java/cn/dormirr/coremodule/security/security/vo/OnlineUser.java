@@ -13,7 +13,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OnlineUser {
-
     private String userNumber;
     private String userName;
     private String userRole;

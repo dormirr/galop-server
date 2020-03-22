@@ -18,7 +18,6 @@ import java.util.*;
 @Service
 @Slf4j
 public class OnlineUserService {
-
     private final SecurityProperties properties;
     private final RedisUtils redisUtils;
 

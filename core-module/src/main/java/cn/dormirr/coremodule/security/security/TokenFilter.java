@@ -25,7 +25,6 @@ import java.io.IOException;
  */
 @Slf4j
 public class TokenFilter extends GenericFilterBean {
-
     private final TokenProvider tokenProvider;
 
     TokenFilter(TokenProvider tokenProvider) {

@@ -34,7 +34,6 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
     @Value("${loginCode.expiration}")
     private Long expiration;
     private Boolean singleLogin = false;

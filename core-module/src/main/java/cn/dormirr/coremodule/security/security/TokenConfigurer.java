@@ -11,7 +11,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @author ZhangTianCi
  */
 public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-
     private final TokenProvider tokenProvider;
 
     public TokenConfigurer(TokenProvider tokenProvider) {
@@ -21,6 +20,7 @@ public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFi
     @Override
     public void configure(HttpSecurity http) {
         TokenFilter customFilter = new TokenFilter(tokenProvider);
+        assert http != null;
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

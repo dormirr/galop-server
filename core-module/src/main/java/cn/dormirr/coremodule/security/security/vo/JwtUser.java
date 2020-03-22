@@ -13,7 +13,6 @@ import java.util.Collection;
  * @author ZhangTianCi
  */
 public class JwtUser implements UserDetails {
-
     private String userNumber;
     private String userName;
     private String userPassword;

@@ -47,7 +47,7 @@ public class UserController {
         };
 
         try (InputStream inputStream = file.getInputStream()) {
-            ExcelUtil.readBySax(inputStream, 0, rowHandler);
+            ExcelUtil.readBySax(inputStream, 1, rowHandler);
         } catch (IOException e) {
             e.printStackTrace();
         }

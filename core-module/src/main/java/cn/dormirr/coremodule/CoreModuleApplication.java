@@ -23,5 +23,4 @@ public class CoreModuleApplication {
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
     }
-
 }
