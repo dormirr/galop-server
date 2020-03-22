@@ -83,14 +83,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ).permitAll()
                 // Druid
                 .antMatchers("/druid/**").permitAll()
-                // 测试
-                .antMatchers("/role/hello").permitAll()
                 // 授权
                 .antMatchers("/auth/login").permitAll()
                 // 退出
                 .antMatchers("/auth/logout").permitAll()
                 // 头像
                 .antMatchers("/avatar/**").permitAll()
+                // 模板
+                .antMatchers("/file/**").permitAll()
 
                 // 其他请求都需要认证
                 .anyRequest()
