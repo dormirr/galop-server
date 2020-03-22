@@ -1,7 +1,8 @@
 package cn.dormirr.coremodule.role.service;
 
-
 import cn.dormirr.coremodule.role.service.dto.UserDto;
+
+import java.util.List;
 
 /**
  * @author ZhangTianCi
@@ -15,4 +16,11 @@ public interface UserService {
      * @return 用户 DTO
      */
     UserDto findByUserNumber(String userNumber);
+
+    /**
+     * 添加用户
+     *
+     * @param user 用户
+     */
+    void saveUser(List<Object> user);
 }
