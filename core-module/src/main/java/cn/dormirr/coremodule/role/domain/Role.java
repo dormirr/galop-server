@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * @author ZhangTianCi
+ */
 @Entity
 @Table(schema = "galop")
 public class Role {
@@ -13,7 +16,8 @@ public class Role {
     private String roleName;
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, insertable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -23,7 +27,7 @@ public class Role {
     }
 
     @Basic
-    @Column(name = "create_time", nullable = false)
+    @Column(name = "create_time", nullable = false, insertable = false, updatable = false)
     public Timestamp getCreateTime() {
         return createTime;
     }
@@ -33,7 +37,7 @@ public class Role {
     }
 
     @Basic
-    @Column(name = "update_time", nullable = false)
+    @Column(name = "update_time", nullable = false, insertable = false, updatable = false)
     public Timestamp getUpdateTime() {
         return updateTime;
     }

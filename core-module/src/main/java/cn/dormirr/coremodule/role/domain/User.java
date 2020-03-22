@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * @author ZhangTianCi
+ */
 @Entity
 @Table(schema = "galop")
 public class User {
@@ -19,7 +22,8 @@ public class User {
     private Role roleByRoleId;
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, insertable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -29,7 +33,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "create_time", nullable = false)
+    @Column(name = "create_time", nullable = false, insertable = false, updatable = false)
     public Timestamp getCreateTime() {
         return createTime;
     }
@@ -39,7 +43,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "update_time", nullable = false)
+    @Column(name = "update_time", nullable = false, insertable = false, updatable = false)
     public Timestamp getUpdateTime() {
         return updateTime;
     }
@@ -49,7 +53,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "user_number", nullable = false, length = 12)
+    @Column(name = "user_number", nullable = false, length = 12, updatable = false)
     public String getUserNumber() {
         return userNumber;
     }
@@ -69,7 +73,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "user_password", nullable = false, length = 172)
+    @Column(name = "user_password", nullable = false, length = 172, insertable = false)
     public String getUserPassword() {
         return userPassword;
     }
@@ -89,7 +93,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "user_portrait", nullable = false, length = 50)
+    @Column(name = "user_portrait", nullable = false, length = 50, insertable = false)
     public String getUserPortrait() {
         return userPortrait;
     }
@@ -99,7 +103,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "user_fighting_capacity", nullable = false)
+    @Column(name = "user_fighting_capacity", nullable = false, insertable = false)
     public Integer getUserFightingCapacity() {
         return userFightingCapacity;
     }
