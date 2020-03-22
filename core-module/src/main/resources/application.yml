@@ -1,36 +1,40 @@
 spring:
   datasource:
-    druid:
-      url: jdbc:postgresql://localhost:5432/galop
-      username: postgres
-      password: 123456
+    url: jdbc:postgresql://localhost:5432/galop
+    username: postgres
+    password: 123456
 
-      # 连接池
-      initialSize: 1
-      maxActive: 20
-      maxWait: 60000
-      minIdle: 1
-
-      # 异步初始化
-      asyncInit: true
-
-      # 缓存 PSCache
-      poolPreparedStatements: true
-      maxOpenPreparedStatements: 20
-
-      # 检查间隔与最短连接时间
-      timeBetweenEvictionRunsMillis: 60000
-      minEvictableIdleTimeMillis: 300000
-
-      # 检测连接是否安全有效
-      validationQuery: select 1
-      validationQueryTimeout: 5
-      testWhileIdle: true
-      testOnBorrow: true
-      testOnReturn: true
-
-      # 监控
-      filters: stat,wall,slf4j
+  #    druid:
+  #      url: jdbc:postgresql://localhost:5432/galop
+  #      username: postgres
+  #      password: 123456
+  #
+  #      # 连接池
+  #      initialSize: 1
+  #      maxActive: 20
+  #      maxWait: 60000
+  #      minIdle: 1
+  #
+  #      # 异步初始化
+  #      asyncInit: true
+  #
+  #      # 缓存 PSCache
+  #      poolPreparedStatements: true
+  #      maxOpenPreparedStatements: 20
+  #
+  #      # 检查间隔与最短连接时间
+  #      timeBetweenEvictionRunsMillis: 60000
+  #      minEvictableIdleTimeMillis: 300000
+  #
+  #      # 检测连接是否安全有效
+  #      validationQuery: select 1
+  #      validationQueryTimeout: 5
+  #      testWhileIdle: true
+  #      testOnBorrow: true
+  #      testOnReturn: true
+  #
+  #      # 监控
+  #      filters: stat,wall,slf4j
 
   jpa:
     show-sql: true
@@ -50,6 +54,11 @@ spring:
     password:
     # 连接超时时间
     timeout: 5000
+  servlet:
+    multipart:
+      enabled: true
+      location: D:\IdeaProjects\galop-server\file\
+
 
 # 邮箱验证码有效时间/分钟
 code:
