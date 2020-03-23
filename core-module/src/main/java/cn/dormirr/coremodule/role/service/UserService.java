@@ -30,4 +30,11 @@ public interface UserService {
      * @param userDto 用户
      */
     void saveUserPortrait(UserDto userDto);
+
+    /**
+     * 修改用户姓名和邮箱
+     *
+     * @param userDto 用户
+     */
+    void saveUserNameAndEmail(UserDto userDto);
 }

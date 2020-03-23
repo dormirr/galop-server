@@ -71,4 +71,14 @@ public class UserServiceImpl implements UserService {
     public void saveUserPortrait(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
+
+    /**
+     * 修改用户姓名和邮箱
+     *
+     * @param userDto 用户
+     */
+    @Override
+    public void saveUserNameAndEmail(UserDto userDto) {
+        userRepository.save(userMapper.toEntity(userDto));
+    }
 }

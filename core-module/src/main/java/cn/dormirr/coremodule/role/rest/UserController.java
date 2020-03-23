@@ -100,4 +100,20 @@ public class UserController {
 
         return ResponseEntity.ok(status);
     }
+
+    @PutMapping("/updateNameAndEmail")
+    @PreAuthorize("hasAnyAuthority('老师','学生')")
+    public ResponseEntity<Object> updateNameAndEmail(@RequestBody UserNameAndEmail userNameAndEmail) {
+        UserDto user = userService.findByUserNumber(SecurityUtils.getUsername());
+        user.setUserName(userNameAndEmail.getUserName());
+        user.setUserEmail(userNameAndEmail.getUserEmail());
+        userService.saveUserNameAndEmail(user);
+
+        // 返回成功信息
+        Map<String, Object> status = new HashMap<>(1) {{
+            put("status", 201);
+        }};
+
+        return ResponseEntity.ok(status);
+    }
 }
