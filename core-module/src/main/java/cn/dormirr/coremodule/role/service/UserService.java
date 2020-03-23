@@ -23,4 +23,11 @@ public interface UserService {
      * @param user 用户
      */
     void saveUser(List<Object> user);
+
+    /**
+     * 修改用户头像
+     *
+     * @param userDto 用户
+     */
+    void saveUserPortrait(UserDto userDto);
 }

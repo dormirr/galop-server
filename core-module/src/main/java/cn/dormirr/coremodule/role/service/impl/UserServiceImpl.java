@@ -61,4 +61,14 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.save(users);
     }
+
+    /**
+     * 修改用户头像
+     *
+     * @param userDto 用户
+     */
+    @Override
+    public void saveUserPortrait(UserDto userDto) {
+        userRepository.save(userMapper.toEntity(userDto));
+    }
 }

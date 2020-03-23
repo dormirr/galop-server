@@ -64,4 +64,40 @@ public class UserController {
 
         return ResponseEntity.ok(status);
     }
+
+    @PutMapping("/updatePortrait")
+    @PreAuthorize("hasAnyAuthority('老师','学生')")
+    public ResponseEntity<Object> updatePortrait(@RequestParam("file") MultipartFile file) {
+        UserDto user = userService.findByUserNumber(SecurityUtils.getUsername());
+        String fileType = ".";
+        if ("image/jpeg".equals(file.getContentType())) {
+            fileType += "jpg";
+        } else if ("image/png".equals(file.getContentType())) {
+            fileType += "png";
+        } else {
+            Map<String, Object> status = new HashMap<>(1) {{
+                put("status", 422);
+            }};
+            return ResponseEntity.ok(status);
+        }
+
+        String path = "D:\\IdeaProjects\\galop-server\\avatar\\" + user.getUserNumber() + fileType;
+
+        try (InputStream inputStream = file.getInputStream()) {
+            FileUtils.writeFromStream(inputStream, path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String userPortrait = "http://localhost:8080/avatar/" + user.getUserNumber() + fileType;
+        user.setUserPortrait(userPortrait);
+        userService.saveUserPortrait(user);
+
+        // 返回成功信息
+        Map<String, Object> status = new HashMap<>(1) {{
+            put("status", 201);
+        }};
+
+        return ResponseEntity.ok(status);
+    }
 }
