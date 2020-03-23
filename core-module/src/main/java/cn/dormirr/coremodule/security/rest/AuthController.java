@@ -132,6 +132,7 @@ public class AuthController {
      * 退出登录
      */
     @DeleteMapping(value = "/logout")
+    @PreAuthorize("hasAnyAuthority('老师','学生')")
     public ResponseEntity<Object> logout(HttpServletRequest request) {
         // 退出登录
         onlineUserService.logout(tokenProvider.getToken(request));

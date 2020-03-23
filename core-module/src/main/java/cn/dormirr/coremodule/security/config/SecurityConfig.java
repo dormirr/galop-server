@@ -82,10 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ).permitAll()
                 // Druid
                 .antMatchers("/druid/**").permitAll()
-                // 授权
+                // 登录
                 .antMatchers("/auth/login").permitAll()
-                // 退出
-                .antMatchers("/auth/logout").permitAll()
                 // 头像
                 .antMatchers("/avatar/**").permitAll()
                 // 模板
