@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * @author ZhangTianCi
  */
-public class FileUtil extends cn.hutool.core.io.FileUtil {
+public class FileUtils extends cn.hutool.core.io.FileUtil {
 
     /**
      * 定义GB的计算常量

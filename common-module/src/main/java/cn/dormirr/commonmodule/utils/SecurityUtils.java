@@ -30,7 +30,6 @@ public class SecurityUtils {
      */
     public static String getUsername() {
         Object obj = getUserDetails();
-        System.out.println(new JSONObject(obj).get("username", String.class));
         return new JSONObject(obj).get("username", String.class);
     }
 }
