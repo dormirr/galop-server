@@ -37,4 +37,11 @@ public interface UserService {
      * @param userDto 用户
      */
     void saveUserNameAndEmail(UserDto userDto);
+
+    /**
+     * 修改用户密码
+     *
+     * @param userDto 用户
+     */
+    void saveUserPassword(UserDto userDto);
 }

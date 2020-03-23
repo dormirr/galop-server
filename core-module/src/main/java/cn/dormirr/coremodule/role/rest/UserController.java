@@ -1,15 +1,25 @@
 package cn.dormirr.coremodule.role.rest;
 
+import cn.dormirr.commonmodule.utils.FileUtils;
+import cn.dormirr.commonmodule.utils.SecurityUtils;
+import cn.dormirr.coremodule.role.domain.vo.UserNameAndEmail;
+import cn.dormirr.coremodule.role.domain.vo.UserPassword;
 import cn.dormirr.coremodule.role.service.RoleService;
 import cn.dormirr.coremodule.role.service.UserService;
+import cn.dormirr.coremodule.role.service.dto.UserDto;
+import cn.dormirr.coremodule.security.security.TokenProvider;
+import cn.dormirr.coremodule.security.service.OnlineUserService;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -21,12 +31,14 @@ import java.util.*;
 @RestController
 @RequestMapping("/role")
 public class UserController {
+    private final TokenProvider tokenProvider;
+    private final OnlineUserService onlineUserService;
     private final UserService userService;
-    private final RoleService roleService;
 
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService, TokenProvider tokenProvider, OnlineUserService onlineUserService) {
         this.userService = userService;
-        this.roleService = roleService;
+        this.onlineUserService = onlineUserService;
+        this.tokenProvider = tokenProvider;
     }
 
     @PostMapping("/register")
@@ -108,6 +120,24 @@ public class UserController {
         user.setUserName(userNameAndEmail.getUserName());
         user.setUserEmail(userNameAndEmail.getUserEmail());
         userService.saveUserNameAndEmail(user);
+
+        // 返回成功信息
+        Map<String, Object> status = new HashMap<>(1) {{
+            put("status", 201);
+        }};
+
+        return ResponseEntity.ok(status);
+    }
+
+    @PutMapping("/updatePassword")
+    @PreAuthorize("hasAnyAuthority('老师','学生')")
+    public ResponseEntity<Object> updatePassword(@RequestBody UserPassword userPassword, HttpServletRequest request) {
+        UserDto user = userService.findByUserNumber(SecurityUtils.getUsername());
+        String password = new BCryptPasswordEncoder().encode(userPassword.getUserPassword());
+        user.setUserPassword(password);
+        userService.saveUserPassword(user);
+        // 退出登录
+        onlineUserService.logout(tokenProvider.getToken(request));
 
         // 返回成功信息
         Map<String, Object> status = new HashMap<>(1) {{
