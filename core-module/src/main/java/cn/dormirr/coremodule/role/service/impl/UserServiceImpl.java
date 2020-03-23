@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 添加用户
+     * 批量添加用户
      *
      * @param user 用户
      */

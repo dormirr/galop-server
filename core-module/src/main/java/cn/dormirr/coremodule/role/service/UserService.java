@@ -18,7 +18,7 @@ public interface UserService {
     UserDto findByUserNumber(String userNumber);
 
     /**
-     * 添加用户
+     * 批量添加用户
      *
      * @param user 用户
      */

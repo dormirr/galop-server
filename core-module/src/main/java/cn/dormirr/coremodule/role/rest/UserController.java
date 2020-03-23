@@ -54,9 +54,9 @@ public class UserController {
 
         // 返回成功信息
         Map<String, Object> status = new HashMap<>(1) {{
-            put("status", 200);
-            put("添加成功数量", count[0]);
-            put("添加失败数量", count[1]);
+            put("status", 201);
+            put("suc", count[0]);
+            put("err", count[1]);
         }};
         if (count[1] > 0) {
             status.put("失败账号", list);
