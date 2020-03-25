@@ -91,4 +91,14 @@ public class UserServiceImpl implements UserService {
     public void saveUserPassword(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
+
+    /**
+     * 修改用户角色
+     *
+     * @param userDto 用户
+     */
+    @Override
+    public void saveUserRole(UserDto userDto) {
+        userRepository.save(userMapper.toEntity(userDto));
+    }
 }
