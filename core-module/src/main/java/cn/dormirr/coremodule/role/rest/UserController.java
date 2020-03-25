@@ -4,7 +4,6 @@ import cn.dormirr.commonmodule.utils.FileUtils;
 import cn.dormirr.commonmodule.utils.SecurityUtils;
 import cn.dormirr.coremodule.role.domain.vo.UserNameAndEmail;
 import cn.dormirr.coremodule.role.domain.vo.UserPassword;
-import cn.dormirr.coremodule.role.service.RoleService;
 import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.security.security.TokenProvider;
@@ -15,14 +14,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author ZhangTianCi
@@ -78,7 +79,7 @@ public class UserController {
     }
 
     @PutMapping("/updatePortrait")
-    @PreAuthorize("hasAnyAuthority('老师','学生')")
+    @PreAuthorize("hasAnyAuthority('老师','学生','队长')")
     public ResponseEntity<Object> updatePortrait(@RequestParam("file") MultipartFile file) {
         UserDto user = userService.findByUserNumber(SecurityUtils.getUsername());
         String fileType = ".";
@@ -114,7 +115,7 @@ public class UserController {
     }
 
     @PutMapping("/updateNameAndEmail")
-    @PreAuthorize("hasAnyAuthority('老师','学生')")
+    @PreAuthorize("hasAnyAuthority('老师','学生','队长')")
     public ResponseEntity<Object> updateNameAndEmail(@RequestBody UserNameAndEmail userNameAndEmail) {
         UserDto user = userService.findByUserNumber(SecurityUtils.getUsername());
         user.setUserName(userNameAndEmail.getUserName());
@@ -130,7 +131,7 @@ public class UserController {
     }
 
     @PutMapping("/updatePassword")
-    @PreAuthorize("hasAnyAuthority('老师','学生')")
+    @PreAuthorize("hasAnyAuthority('老师','学生','队长')")
     public ResponseEntity<Object> updatePassword(@RequestBody UserPassword userPassword, HttpServletRequest request) {
         UserDto user = userService.findByUserNumber(SecurityUtils.getUsername());
         String password = new BCryptPasswordEncoder().encode(userPassword.getUserPassword());

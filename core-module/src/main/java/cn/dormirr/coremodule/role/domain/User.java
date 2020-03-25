@@ -8,7 +8,7 @@ import java.util.Objects;
  * @author ZhangTianCi
  */
 @Entity
-@Table(schema = "galop")
+@Table(name = "user", schema = "galop",catalog = "galop")
 public class User {
     private Long id;
     private Timestamp createTime;

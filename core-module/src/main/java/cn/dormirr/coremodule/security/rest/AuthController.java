@@ -77,6 +77,7 @@ public class AuthController {
         Map<String, Object> authInfo = new HashMap<>(3) {{
             put("token", properties.getTokenStartWith() + token);
             put("authority",jwtUser.getRoleByRoleId().getRoleName());
+            put("id",jwtUser.getUsername());
             put("status", 200);
         }};
 
@@ -95,7 +96,7 @@ public class AuthController {
      * 获取用户信息
      */
     @GetMapping(value = "/info")
-    @PreAuthorize("hasAnyAuthority('老师','学生')")
+    @PreAuthorize("hasAnyAuthority('老师','学生','队长')")
     public ResponseEntity<Object> getUserInfo() {
         JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(SecurityUtils.getUsername());
         return ResponseEntity.ok(jwtUser);
@@ -132,7 +133,7 @@ public class AuthController {
      * 退出登录
      */
     @DeleteMapping(value = "/logout")
-    @PreAuthorize("hasAnyAuthority('老师','学生')")
+    @PreAuthorize("hasAnyAuthority('老师','学生','队长')")
     public ResponseEntity<Object> logout(HttpServletRequest request) {
         // 退出登录
         onlineUserService.logout(tokenProvider.getToken(request));
