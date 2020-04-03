@@ -1,6 +1,6 @@
 package cn.dormirr.coremodule.role.service.impl;
 
-import cn.dormirr.coremodule.role.domain.User;
+import cn.dormirr.coremodule.role.domain.UserEntity;
 import cn.dormirr.coremodule.role.repository.UserRepository;
 import cn.dormirr.coremodule.role.service.RoleService;
 import cn.dormirr.coremodule.role.service.UserService;
@@ -34,9 +34,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto findByUserNumber(String userNumber) {
-        User user = userRepository.findByUserNumber(userNumber);
-        if (user != null) {
-            return userMapper.toDto(user);
+        UserEntity userEntity = userRepository.findByUserNumber(userNumber);
+        if (userEntity != null) {
+            return userMapper.toDto(userEntity);
         }
         return null;
     }

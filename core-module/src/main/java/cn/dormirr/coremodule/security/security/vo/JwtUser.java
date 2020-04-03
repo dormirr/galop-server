@@ -1,6 +1,6 @@
 package cn.dormirr.coremodule.security.security.vo;
 
-import cn.dormirr.coremodule.role.domain.Role;
+import cn.dormirr.coremodule.role.domain.RoleEntity;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +19,7 @@ public class JwtUser implements UserDetails {
     private String userEmail;
     private String userPortrait;
     private Integer userFightingCapacity;
-    private Role roleByRoleId;
+    private RoleEntity roleByRoleId;
 
     public JwtUser(UserDto userDto) {
         this.userNumber = userDto.getUserNumber();
@@ -82,11 +82,11 @@ public class JwtUser implements UserDetails {
         this.userFightingCapacity = userFightingCapacity;
     }
 
-    public Role getRoleByRoleId() {
+    public RoleEntity getRoleByRoleId() {
         return roleByRoleId;
     }
 
-    public void setRoleByRoleId(Role roleByRoleId) {
+    public void setRoleByRoleId(RoleEntity roleByRoleId) {
         this.roleByRoleId = roleByRoleId;
     }
 

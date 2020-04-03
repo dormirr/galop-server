@@ -1,6 +1,6 @@
 package cn.dormirr.coremodule.role.service.impl;
 
-import cn.dormirr.coremodule.role.domain.Role;
+import cn.dormirr.coremodule.role.domain.RoleEntity;
 import cn.dormirr.coremodule.role.repository.RoleRepository;
 import cn.dormirr.coremodule.role.service.RoleService;
 import cn.dormirr.coremodule.role.service.dto.RoleDto;
@@ -28,7 +28,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public RoleDto findByRoleName(String roleName) {
-        Role role = roleRepository.findByRoleName(roleName);
+        RoleEntity role = roleRepository.findByRoleName(roleName);
         if (role != null) {
             return roleMapper.toDto(role);
         }

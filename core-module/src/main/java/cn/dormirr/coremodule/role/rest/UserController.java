@@ -49,7 +49,6 @@ public class UserController {
         List<String> list = new ArrayList<>();
         // 创建行处理器
         RowHandler rowHandler = (sheetIndex, rowIndex, rowlist) -> {
-            System.out.println("[{" + sheetIndex + "}]" + " " + "[{" + rowIndex + "}]" + " " + "{" + rowlist + "}");
             if (rowIndex >= 1 && rowlist.get(0) != null && rowlist.get(1) != null && rowlist.get(3) != null) {
                 System.out.println(rowlist.get(0) + " " + rowlist.get(1) + " " + rowlist.get(3));
                 userService.saveUser(rowlist);

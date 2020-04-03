@@ -1,6 +1,7 @@
 package cn.dormirr.coremodule.role.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -8,8 +9,8 @@ import java.util.Objects;
  * @author ZhangTianCi
  */
 @Entity
-@Table(name = "user", schema = "galop",catalog = "galop")
-public class User {
+@Table(name = "user", schema = "galop", catalog = "galop")
+public class UserEntity implements Serializable {
     private Long id;
     private Timestamp createTime;
     private Timestamp updateTime;
@@ -19,7 +20,7 @@ public class User {
     private String userEmail;
     private String userPortrait;
     private Integer userFightingCapacity;
-    private Role roleByRoleId;
+    private RoleEntity roleByRoleId;
 
     @Id
     @Column(name = "id", nullable = false, insertable = false, updatable = false)
@@ -63,7 +64,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "user_name", nullable = false, length = 50)
+    @Column(name = "user_name", nullable = false, length = 24)
     public String getUserName() {
         return userName;
     }
@@ -83,7 +84,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "user_email", nullable = true, length = 50)
+    @Column(name = "user_email", nullable = true, length = 320)
     public String getUserEmail() {
         return userEmail;
     }
@@ -93,7 +94,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "user_portrait", nullable = false, length = 50, insertable = false)
+    @Column(name = "user_portrait", nullable = false, length = 2083, insertable = false)
     public String getUserPortrait() {
         return userPortrait;
     }
@@ -120,16 +121,16 @@ public class User {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(createTime, user.createTime) &&
-                Objects.equals(updateTime, user.updateTime) &&
-                Objects.equals(userNumber, user.userNumber) &&
-                Objects.equals(userName, user.userName) &&
-                Objects.equals(userPassword, user.userPassword) &&
-                Objects.equals(userEmail, user.userEmail) &&
-                Objects.equals(userPortrait, user.userPortrait) &&
-                Objects.equals(userFightingCapacity, user.userFightingCapacity);
+        UserEntity that = (UserEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(createTime, that.createTime) &&
+                Objects.equals(updateTime, that.updateTime) &&
+                Objects.equals(userNumber, that.userNumber) &&
+                Objects.equals(userName, that.userName) &&
+                Objects.equals(userPassword, that.userPassword) &&
+                Objects.equals(userEmail, that.userEmail) &&
+                Objects.equals(userPortrait, that.userPortrait) &&
+                Objects.equals(userFightingCapacity, that.userFightingCapacity);
     }
 
     @Override
@@ -139,11 +140,11 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
-    public Role getRoleByRoleId() {
+    public RoleEntity getRoleByRoleId() {
         return roleByRoleId;
     }
 
-    public void setRoleByRoleId(Role roleByRoleId) {
+    public void setRoleByRoleId(RoleEntity roleByRoleId) {
         this.roleByRoleId = roleByRoleId;
     }
 }

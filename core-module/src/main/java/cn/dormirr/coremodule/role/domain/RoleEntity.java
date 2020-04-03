@@ -1,6 +1,7 @@
 package cn.dormirr.coremodule.role.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -8,8 +9,8 @@ import java.util.Objects;
  * @author ZhangTianCi
  */
 @Entity
-@Table(name = "role",schema = "galop", catalog = "galop")
-public class Role {
+@Table(name = "role", schema = "galop", catalog = "galop")
+public class RoleEntity implements Serializable {
     private Long id;
     private Timestamp createTime;
     private Timestamp updateTime;
@@ -47,7 +48,7 @@ public class Role {
     }
 
     @Basic
-    @Column(name = "role_name", nullable = false, length = 50)
+    @Column(name = "role_name", nullable = false, length = 8)
     public String getRoleName() {
         return roleName;
     }
@@ -64,11 +65,11 @@ public class Role {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Role role = (Role) o;
-        return Objects.equals(id, role.id) &&
-                Objects.equals(createTime, role.createTime) &&
-                Objects.equals(updateTime, role.updateTime) &&
-                Objects.equals(roleName, role.roleName);
+        RoleEntity that = (RoleEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(createTime, that.createTime) &&
+                Objects.equals(updateTime, that.updateTime) &&
+                Objects.equals(roleName, that.roleName);
     }
 
     @Override

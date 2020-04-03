@@ -1,7 +1,7 @@
 package cn.dormirr.coremodule.role.service.mapper;
 
 import cn.dormirr.commonmodule.base.BaseMapper;
-import cn.dormirr.coremodule.role.domain.Role;
+import cn.dormirr.coremodule.role.domain.RoleEntity;
 import cn.dormirr.coremodule.role.service.dto.RoleDto;
 import org.mapstruct.Mapper;
 
@@ -9,23 +9,23 @@ import org.mapstruct.Mapper;
  * @author ZhangTianCi
  */
 @Mapper(componentModel = "spring")
-public interface RoleMapper extends BaseMapper<RoleDto, Role> {
+public interface RoleMapper extends BaseMapper<RoleDto, RoleEntity> {
 
     /**
-     * DTO 转实体
+     * DTO 转 RoleEntity
      *
      * @param roleDto RoleDTO
-     * @return 实体
+     * @return RoleEntity
      */
     @Override
-    Role toEntity(RoleDto roleDto);
+    RoleEntity toEntity(RoleDto roleDto);
 
     /**
-     * Role 实体转 RoleDTO
+     * RoleEntity 转 RoleDTO
      *
-     * @param role Role 实体
+     * @param roleEntity roleEntity
      * @return RoleDTO
      */
     @Override
-    RoleDto toDto(Role role);
+    RoleDto toDto(RoleEntity roleEntity);
 }
