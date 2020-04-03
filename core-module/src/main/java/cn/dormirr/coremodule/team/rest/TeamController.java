@@ -1,25 +1,16 @@
 package cn.dormirr.coremodule.team.rest;
 
-import cn.dormirr.commonmodule.utils.SecurityUtils;
-import cn.dormirr.coremodule.role.service.RoleService;
-import cn.dormirr.coremodule.role.service.UserService;
-import cn.dormirr.coremodule.role.service.dto.RoleDto;
-import cn.dormirr.coremodule.role.service.dto.UserDto;
-import cn.dormirr.coremodule.role.service.mapper.RoleMapper;
-import cn.dormirr.coremodule.role.service.mapper.UserMapper;
-import cn.dormirr.coremodule.team.domain.Team;
-import cn.dormirr.coremodule.team.domain.vo.TeamNameAndProfile;
+import cn.dormirr.coremodule.team.domain.vo.*;
 import cn.dormirr.coremodule.team.service.TeamService;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,87 +21,252 @@ import java.util.Map;
 @RequestMapping("/team")
 public class TeamController {
     private final TeamService teamService;
-    private final UserService userService;
-    private final UserMapper userMapper;
-    private final RoleMapper roleMapper;
-    private final RoleService roleService;
 
-    public TeamController(TeamService teamService, UserService userService, UserMapper userMapper, RoleMapper roleMapper, RoleService roleService) {
+    public TeamController(TeamService teamService) {
         this.teamService = teamService;
-        this.userService = userService;
-        this.userMapper = userMapper;
-        this.roleMapper = roleMapper;
-        this.roleService = roleService;
     }
 
-    @PostMapping("/addTeam")
-    @PreAuthorize("hasAnyAuthority('老师','学生','队长')")
-    public ResponseEntity<Object> addTeam(@RequestBody TeamNameAndProfile teamNameAndProfile) {
-        UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
-        RoleDto roleDto = roleService.findByRoleName("队长");
+    @PostMapping("/save-team")
+    @PreAuthorize("hasAnyAuthority('学生')")
+    public ResponseEntity<Object> saveTeam(@RequestBody SaveTeam saveTeam) {
         TeamDto teamDto = new TeamDto();
-        teamDto.setTeamName(teamNameAndProfile.getTeamName());
-        if (teamNameAndProfile.getTeamProfile() != null) {
-            teamDto.setTeamProfile(teamNameAndProfile.getTeamProfile());
+        teamDto.setTeamName(saveTeam.getTeamName());
+        if (saveTeam.getTeamProfile() != null) {
+            teamDto.setTeamProfile(saveTeam.getTeamProfile());
         }
-        teamDto.setTotalTeamFightingPower(userDto.getUserFightingCapacity());
-        teamDto.setRoleByRoleId(roleMapper.toEntity(roleDto));
-        teamDto.setUserByUserId(userMapper.toEntity(userDto));
-        teamDto.setTeamState("通过");
+
         teamService.saveTeam(teamDto);
-        userDto.setRoleByRoleId(roleMapper.toEntity(roleDto));
-        userService.saveUserRole(userDto);
 
-        // 返回成功信息
-        Map<String, Object> status = new HashMap<>(1) {{
-            put("status", 201);
-        }};
-        return ResponseEntity.ok(status);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/selectTeam")
-    @PreAuthorize("hasAnyAuthority('老师','学生','队长')")
-    public ResponseEntity<Object> selectTeam() {
-        UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
-        List<Team> list = teamService.findByUser(userDto).getContent();
+    @GetMapping("/find-team")
+    @PreAuthorize("hasAnyAuthority('学生')")
+    public ResponseEntity<Object> findTeam(FindTeam findTeam) {
+        TeamDto teamDto = new TeamDto();
+        if (findTeam.getId() != null) {
+            teamDto.setId(findTeam.getId());
+        }
+        if (findTeam.getTeamName() != null) {
+            teamDto.setTeamName(findTeam.getTeamName());
+        }
+        if (findTeam.getTeamFightingCapacity() != null) {
+            teamDto.setTeamFightingCapacity(findTeam.getTeamFightingCapacity());
+        }
+        int pageSize = findTeam.getPageSize();
+        int current = findTeam.getCurrent();
+        String sorter = null;
+        if (!"".equals(findTeam.getSorter())) {
+            sorter = findTeam.getSorter();
+        }
 
-        // 返回成功信息
-        Map<String, Object> status = new HashMap<>(2) {{
-            put("status", 200);
-            put("list", list);
-        }};
-        return ResponseEntity.ok(status);
-    }
-
-    @GetMapping("/selectAllTeam")
-    @PreAuthorize("hasAnyAuthority('老师','学生','队长')")
-    public ResponseEntity<Object> selectAllTeam(TeamDto teamDto) {
-        RoleDto roleDto = roleService.findByRoleName("队长");
-        List<Team> data = teamService.findAllByRole(roleDto, teamDto);
+        Page<TeamDto> data = teamService.findTeam(teamDto, pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> status = new HashMap<>(5) {{
             put("status", 200);
-            put("data", data);
+            put("data", data.getContent());
+            put("total", data.getTotalElements());
+            put("current", data.getTotalPages());
+            put("pageSize", pageSize);
         }};
-        return ResponseEntity.ok(status);
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
 
-    @PostMapping("/addUserTeam")
-    @PreAuthorize("hasAnyAuthority('老师','学生','队长')")
-    public ResponseEntity<Object> addUserTeam(Long id) {
-        UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
-        TeamDto teamDto = teamService.findById(id);
-        RoleDto roleDto = roleService.findByRoleName("学生");
-        teamDto.setUserByUserId(userMapper.toEntity(userDto));
-        teamDto.setRoleByRoleId(roleMapper.toEntity(roleDto));
-        teamDto.setTeamState("审核");
-        teamService.saveAddUserTeam(teamDto);
+    @PostMapping("/apply-team")
+    @PreAuthorize("hasAnyAuthority('学生')")
+    public ResponseEntity<Object> applyTeam(@RequestBody ApplyTeam applyTeam) {
+        boolean success = teamService.applyTeam(applyTeam.getId());
+        if (success) {
+            Map<String, Object> result = new HashMap<>(3) {
+                {
+                    put("code", 201);
+                    put("success", true);
+                    put("message", "成功发送申请！");
+                }
+            };
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        } else {
+            Map<String, Object> result = new HashMap<>(3) {
+                {
+                    put("code", 400);
+                    put("success", false);
+                    put("message", "你已发送过申请或你已在队伍中！");
+                }
+            };
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/find-apply-team")
+    @PreAuthorize("hasAnyAuthority('学生')")
+    public ResponseEntity<Object> findApplyTeam(FindApplyTeam findApplyTeam) {
+        TeamDto teamDto = new TeamDto();
+        if (findApplyTeam.getId() != null) {
+            teamDto.setId(findApplyTeam.getId());
+        }
+        if (findApplyTeam.getTeamName() != null) {
+            teamDto.setTeamName(findApplyTeam.getTeamName());
+        }
+        if (findApplyTeam.getTeamState() != null) {
+            teamDto.setTeamState(findApplyTeam.getTeamState());
+        }
+        if (findApplyTeam.getTeamId() != null) {
+            teamDto.setTeamId(findApplyTeam.getTeamId());
+        }
+        if (findApplyTeam.getUserByUserId() != null) {
+            if (findApplyTeam.getUserByUserId().getId() != null) {
+                teamDto.getUserByUserId().setId(findApplyTeam.getUserByUserId().getId());
+            }
+            if (findApplyTeam.getUserByUserId().getUserName() != null) {
+                teamDto.getUserByUserId().setUserName(findApplyTeam.getUserByUserId().getUserName());
+            }
+            if (findApplyTeam.getUserByUserId().getUserFightingCapacity() != null) {
+                teamDto.getUserByUserId().setUserFightingCapacity(findApplyTeam.getUserByUserId().getUserFightingCapacity());
+            }
+        }
+        int pageSize = findApplyTeam.getPageSize();
+        int current = findApplyTeam.getCurrent();
+        String sorter = null;
+        if (!"".equals(findApplyTeam.getSorter())) {
+            sorter = findApplyTeam.getSorter();
+        }
+
+        Page<TeamDto> data = teamService.findApplyTeam(teamDto, pageSize, current, sorter);
+
+        // 返回成功信息
+        Map<String, Object> result = new HashMap<>(5) {{
+            put("status", 200);
+            put("data", data.getContent());
+            put("total", data.getTotalElements());
+            put("current", data.getTotalPages());
+            put("pageSize", pageSize);
+        }};
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PutMapping("/save-apply-team")
+    @PreAuthorize("hasAnyAuthority('学生')")
+    public ResponseEntity<Object> saveApplyTeam(@RequestBody ApplyTeam applyTeam) {
+        boolean success = teamService.saveApplyTeam(applyTeam.getId());
+        if (success) {
+            Map<String, Object> result = new HashMap<>(3) {
+                {
+                    put("code", 201);
+                    put("success", true);
+                    put("message", "已通过！");
+                }
+            };
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        } else {
+            Map<String, Object> result = new HashMap<>(3) {
+                {
+                    put("code", 400);
+                    put("success", false);
+                    put("message", "此申请已通过或已拒绝！");
+                }
+            };
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/delete-apply-team")
+    @PreAuthorize("hasAnyAuthority('学生')")
+    public ResponseEntity<Object> deleteApplyTeam(@RequestBody ApplyTeam applyTeam) {
+        boolean success = teamService.deleteApplyTeam(applyTeam.getId());
+        if (success) {
+            Map<String, Object> result = new HashMap<>(3) {
+                {
+                    put("code", 201);
+                    put("success", true);
+                    put("message", "已拒绝！");
+                }
+            };
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        } else {
+            Map<String, Object> result = new HashMap<>(3) {
+                {
+                    put("code", 400);
+                    put("success", false);
+                    put("message", "此申请已通过或已拒绝！！");
+                }
+            };
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/find-my-team")
+    @PreAuthorize("hasAnyAuthority('学生')")
+    public ResponseEntity<Object> findMyTeam(FindTeam findTeam) {
+        TeamDto teamDto = new TeamDto();
+        if (findTeam.getId() != null) {
+            teamDto.setId(findTeam.getId());
+        }
+        if (findTeam.getTeamName() != null) {
+            teamDto.setTeamName(findTeam.getTeamName());
+        }
+        if (findTeam.getTeamFightingCapacity() != null) {
+            teamDto.setTeamFightingCapacity(findTeam.getTeamFightingCapacity());
+        }
+        int pageSize = findTeam.getPageSize();
+        int current = findTeam.getCurrent();
+        String sorter = null;
+        if (!"".equals(findTeam.getSorter())) {
+            sorter = findTeam.getSorter();
+        }
+
+        Page<TeamDto> data = teamService.findMyTeam(teamDto, pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> status = new HashMap<>(5) {{
-            put("status", 201);
+            put("status", 200);
+            put("data", data.getContent());
+            put("total", data.getTotalElements());
+            put("current", data.getTotalPages());
+            put("pageSize", pageSize);
         }};
-        return ResponseEntity.ok(status);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
+
+    @GetMapping("/find-one-team")
+    @PreAuthorize("hasAnyAuthority('学生')")
+    public ResponseEntity<Object> findOneTeam(FindOneTeam findOneTeam) {
+        TeamDto teamDto = new TeamDto();
+        teamDto.setTeamId(findOneTeam.getTeamId());
+        int pageSize = findOneTeam.getPageSize();
+        int current = findOneTeam.getCurrent();
+        String sorter = null;
+        if (!"".equals(findOneTeam.getSorter())) {
+            sorter = findOneTeam.getSorter();
+        }
+
+        Page<TeamDto> data = teamService.findOneTeam(teamDto, pageSize, current, sorter);
+
+        // 返回成功信息
+        Map<String, Object> status = new HashMap<>(5) {{
+            put("status", 200);
+            put("data", data.getContent());
+            put("total", data.getTotalElements());
+            put("current", data.getTotalPages());
+            put("pageSize", pageSize);
+        }};
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
+
+    @PutMapping("/save-my-team")
+    @PreAuthorize("hasAnyAuthority('学生')")
+    public ResponseEntity<Object> saveMyTeam(@RequestBody SaveMyTeam saveMyTeam) {
+        TeamDto teamDto = new TeamDto();
+        teamDto.setTeamId(saveMyTeam.getTeamId());
+        if(saveMyTeam.getTeamName()!=null){
+            teamDto.setTeamName(saveMyTeam.getTeamName());
+        }
+        if(saveMyTeam.getTeamProfile()!=null){
+            teamDto.setTeamProfile(saveMyTeam.getTeamProfile());
+        }
+
+        teamService.saveMyTeam(teamDto);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
