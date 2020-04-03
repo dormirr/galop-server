@@ -1,6 +1,7 @@
-package cn.dormirr.coremodule.match.domain;
+package cn.dormirr.coremodule.match.info.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -8,15 +9,17 @@ import java.util.Objects;
  * @author ZhangTianCi
  */
 @Entity
-@Table(name = "match_information", schema = "galop", catalog = "galop")
-public class MatchInformation {
+@Table(name = "match_info", schema = "galop", catalog = "galop")
+public class MatchInfoEntity implements Serializable {
     private Long id;
     private Timestamp createTime;
     private Timestamp updateTime;
     private String matchName;
     private Integer teamSize;
-    private Integer firstPlaceCombatEffectiveness;
+    private Integer championAward;
     private Integer decrementParameter;
+    private Timestamp startTime;
+    private Timestamp endTime;
 
     @Id
     @Column(name = "id", nullable = false, insertable = false, updatable = false)
@@ -50,7 +53,7 @@ public class MatchInformation {
     }
 
     @Basic
-    @Column(name = "match_name", nullable = false, length = 50)
+    @Column(name = "match_name", nullable = false, length = 80)
     public String getMatchName() {
         return matchName;
     }
@@ -70,13 +73,13 @@ public class MatchInformation {
     }
 
     @Basic
-    @Column(name = "first_place_combat_effectiveness", nullable = false)
-    public Integer getFirstPlaceCombatEffectiveness() {
-        return firstPlaceCombatEffectiveness;
+    @Column(name = "champion_award", nullable = false)
+    public Integer getChampionAward() {
+        return championAward;
     }
 
-    public void setFirstPlaceCombatEffectiveness(Integer firstPlaceCombatEffectiveness) {
-        this.firstPlaceCombatEffectiveness = firstPlaceCombatEffectiveness;
+    public void setChampionAward(Integer championAward) {
+        this.championAward = championAward;
     }
 
     @Basic
@@ -89,6 +92,26 @@ public class MatchInformation {
         this.decrementParameter = decrementParameter;
     }
 
+    @Basic
+    @Column(name = "start_time", nullable = false)
+    public Timestamp getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
+
+    @Basic
+    @Column(name = "end_time", nullable = false)
+    public Timestamp getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Timestamp endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -97,18 +120,18 @@ public class MatchInformation {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        MatchInformation that = (MatchInformation) o;
+        MatchInfoEntity that = (MatchInfoEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(createTime, that.createTime) &&
                 Objects.equals(updateTime, that.updateTime) &&
                 Objects.equals(matchName, that.matchName) &&
                 Objects.equals(teamSize, that.teamSize) &&
-                Objects.equals(firstPlaceCombatEffectiveness, that.firstPlaceCombatEffectiveness) &&
+                Objects.equals(championAward, that.championAward) &&
                 Objects.equals(decrementParameter, that.decrementParameter);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createTime, updateTime, matchName, teamSize, firstPlaceCombatEffectiveness, decrementParameter);
+        return Objects.hash(id, createTime, updateTime, matchName, teamSize, championAward, decrementParameter);
     }
 }
