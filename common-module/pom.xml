@@ -15,40 +15,13 @@
     <description>公共模块</description>
 
     <properties>
-        <fastjson.version>1.2.54</fastjson.version>
-        <poi.version>4.1.2</poi.version>
-        <xerces.version>2.12.0</xerces.version>
     </properties>
 
     <dependencies>
-        <!-- Excel 工具 -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${poi.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml-schemas</artifactId>
-            <version>${poi.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>${poi.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>${xerces.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>jakarta.activation</groupId>
             <artifactId>jakarta.activation-api</artifactId>
             <version>1.2.2</version>
         </dependency>
-
     </dependencies>
-
 </project>
