@@ -51,4 +51,11 @@ public interface UserService {
      * @param userDto 用户
      */
     void saveUserRole(UserDto userDto);
+
+    /**
+     * 查询积分前十的人
+     *
+     * @return 查询结果
+     */
+    List<UserDto> findUserFightingCapacity();
 }

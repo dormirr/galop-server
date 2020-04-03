@@ -2,6 +2,7 @@ package cn.dormirr.coremodule.role.rest;
 
 import cn.dormirr.commonmodule.utils.FileUtils;
 import cn.dormirr.commonmodule.utils.SecurityUtils;
+import cn.dormirr.coremodule.announcement.service.dto.AnnouncementDto;
 import cn.dormirr.coremodule.role.domain.vo.UserNameAndEmail;
 import cn.dormirr.coremodule.role.domain.vo.UserPassword;
 import cn.dormirr.coremodule.role.service.UserService;
@@ -11,6 +12,7 @@ import cn.dormirr.coremodule.security.service.OnlineUserService;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -145,5 +147,20 @@ public class UserController {
         }};
 
         return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("/find-user-fighting-capacity")
+    @PreAuthorize("hasAnyAuthority('老师','学生')")
+    public ResponseEntity<Object> findUserFightingCapacity() {
+        List<UserDto> userDto = userService.findUserFightingCapacity();
+
+        Map<String, Object> result = new HashMap<>(4) {{
+            put("code", 200);
+            put("success", true);
+            put("userDto", userDto);
+            put("message", "查询成功！");
+        }};
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package cn.dormirr.coremodule.role.service.impl;
 
+import cn.dormirr.coremodule.announcement.domain.AnnouncementEntity;
 import cn.dormirr.coremodule.role.domain.UserEntity;
 import cn.dormirr.coremodule.role.repository.UserRepository;
 import cn.dormirr.coremodule.role.service.RoleService;
@@ -7,6 +8,10 @@ import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.role.service.mapper.RoleMapper;
 import cn.dormirr.coremodule.role.service.mapper.UserMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,7 +53,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void saveUser(List<Object> user) {
-        User users = new User();
+        UserEntity users = new UserEntity();
         users.setUserNumber((String) user.get(0));
         users.setUserName((String) user.get(1));
         if (user.get(2) != null) {
@@ -100,5 +105,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUserRole(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
+    }
+
+    /**
+     * 查询积分前十的人
+     *
+     * @return 查询结果
+     */
+    @Override
+    public List<UserDto> findUserFightingCapacity() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "userFightingCapacity"));
+
+        Page<UserEntity> data = userRepository.findAll(pageable);
+
+        return userMapper.toDto(data.getContent());
     }
 }
