@@ -69,4 +69,30 @@ public interface TeamRepository extends JpaRepository<TeamEntity, Long>, JpaSpec
      * @return 查询结果
      */
     List<TeamEntity> findAllByTeamId(Long teamId);
+
+    /**
+     * 查询用户的队伍
+     *
+     * @param userEntity 用户
+     * @param teamState  状态
+     * @return 用户的队伍
+     */
+    List<TeamEntity> findAllByUserByUserIdAndTeamState(UserEntity userEntity, String teamState);
+
+    /**
+     * 根据团队查询人数
+     *
+     * @param teamId 团队
+     * @return 查询结果
+     */
+    int countAllByTeamId(Long teamId);
+
+    /**
+     * 根据团队和审核状态查询团队
+     *
+     * @param teamId    团队
+     * @param teamState 审核状态
+     * @return 查询结果
+     */
+    List<TeamEntity> findAllByTeamIdAndTeamState(Long teamId, String teamState);
 }
