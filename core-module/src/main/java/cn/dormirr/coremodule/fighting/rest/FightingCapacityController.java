@@ -5,8 +5,6 @@ import cn.dormirr.coremodule.fighting.domain.vo.ChangeMatchRe;
 import cn.dormirr.coremodule.fighting.domain.vo.FindFightingCapacity;
 import cn.dormirr.coremodule.fighting.service.FightingCapacityService;
 import cn.dormirr.coremodule.fighting.service.dto.FightingCapacityDto;
-import cn.dormirr.coremodule.match.info.service.dto.MatchInfoDto;
-import cn.dormirr.coremodule.registration.service.dto.RegistrationInfoDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

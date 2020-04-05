@@ -30,7 +30,6 @@ public class AnnouncementController {
     @PostMapping("/save-announcement")
     @PreAuthorize("hasAnyAuthority('老师')")
     public ResponseEntity<Object> saveAnnouncement(@RequestBody SaveAnnouncement saveAnnouncement) {
-        System.out.println(saveAnnouncement);
         if (saveAnnouncement.getAnnouncementTitle() == null || saveAnnouncement.getAnnouncementContent() == null) {
             Map<String, Object> result = new HashMap<>(3) {
                 {

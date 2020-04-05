@@ -2,7 +2,6 @@ package cn.dormirr.coremodule.fighting.service;
 
 import cn.dormirr.coremodule.fighting.domain.vo.ChangeMatchRe;
 import cn.dormirr.coremodule.fighting.service.dto.FightingCapacityDto;
-import cn.dormirr.coremodule.match.info.service.dto.MatchInfoDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
