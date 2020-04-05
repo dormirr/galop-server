@@ -4,11 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>cn.dormirr</groupId>
-        <artifactId>core-module</artifactId>
+        <groupId>cn.dormir</groupId>
+        <artifactId>galop</artifactId>
         <version>1.0.0</version>
     </parent>
 
+    <groupId>cn.dormirr</groupId>
     <artifactId>common-module</artifactId>
     <version>1.0.0</version>
     <name>common-module</name>
@@ -18,10 +19,5 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>jakarta.activation</groupId>
-            <artifactId>jakarta.activation-api</artifactId>
-            <version>1.2.2</version>
-        </dependency>
     </dependencies>
 </project>
