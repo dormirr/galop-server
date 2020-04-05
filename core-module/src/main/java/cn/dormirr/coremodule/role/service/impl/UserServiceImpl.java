@@ -29,7 +29,9 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -91,6 +93,8 @@ public class UserServiceImpl implements UserService {
      * @param user 用户
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void saveUser(List<Object> user) {
         UserEntity users = new UserEntity();
         users.setUserNumber((String) user.get(0));
@@ -112,6 +116,8 @@ public class UserServiceImpl implements UserService {
      * @param userDto 用户
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void saveUserPortrait(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -122,6 +128,8 @@ public class UserServiceImpl implements UserService {
      * @param userDto 用户
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void saveUserNameAndEmail(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -132,6 +140,8 @@ public class UserServiceImpl implements UserService {
      * @param userDto 用户
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void saveUserPassword(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -142,6 +152,8 @@ public class UserServiceImpl implements UserService {
      * @param userDto 用户
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void saveUserRole(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -166,6 +178,7 @@ public class UserServiceImpl implements UserService {
      * @param userDto 用户
      */
     @Override
+    @Async
     public void email(UserDto userDto) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         // 邮件发送人
@@ -189,6 +202,8 @@ public class UserServiceImpl implements UserService {
      * @param uuid uuid
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void forget(String uuid) {
         String userNumber = (String) redisUtils.get(uuid);
         if (userNumber == null) {
@@ -205,6 +220,8 @@ public class UserServiceImpl implements UserService {
      * @param userNumber 学号
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void removeUser(String userNumber) {
         UserDto userDto = findByUserNumber(userNumber);
         fightingCapacityRepository.deleteAll(fightingCapacityRepository.findAllByUserByUserId(userMapper.toEntity(userDto)));

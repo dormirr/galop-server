@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author ZhangTianCi
@@ -29,8 +30,8 @@ public class MatchResultController {
 
     @PostMapping("/save-match-result")
     @PreAuthorize("hasAnyAuthority('老师')")
-    public ResponseEntity<Object> saveMatchResult(@RequestParam("file") MultipartFile file) {
-        int count = matchResultService.saveMatchResult(file);
+    public ResponseEntity<Object> saveMatchResult(@RequestParam("file") MultipartFile file) throws ExecutionException, InterruptedException {
+        int count = matchResultService.saveMatchResult(file).get();
 
         if (count < 0) {
             Map<String, Object> result = new HashMap<>(3) {

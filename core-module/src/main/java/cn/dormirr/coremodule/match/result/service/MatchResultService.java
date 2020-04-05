@@ -4,6 +4,7 @@ import cn.dormirr.coremodule.match.result.service.dto.MatchResultDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * @author ZhangTianCi
@@ -16,7 +17,7 @@ public interface MatchResultService {
      * @param multipartFile 比赛结果文件
      * @return 导入数量
      */
-    int saveMatchResult(MultipartFile multipartFile);
+    Future<Integer> saveMatchResult(MultipartFile multipartFile);
 
 
     /**

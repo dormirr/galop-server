@@ -25,7 +25,10 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -33,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * @author ZhangTianCi
@@ -105,7 +109,9 @@ public class MatchResultServiceImpl implements MatchResultService {
      * @return 导入数量
      */
     @Override
-    public int saveMatchResult(MultipartFile multipartFile) {
+    @Async
+    @Transactional(rollbackFor=Exception.class)
+    public Future<Integer> saveMatchResult(MultipartFile multipartFile) {
         final int[] count = {0};
         List<MatchResultDto> matchResultDtoList = new ArrayList<>();
         RowHandler rowHandler = (sheetIndex, rowIndex, rowlist) -> {
@@ -163,6 +169,6 @@ public class MatchResultServiceImpl implements MatchResultService {
 
         announcementRepository.save(announcementMapper.toEntity(announcementDto));
 
-        return count[0];
+        return new AsyncResult<>(count[0]);
     }
 }

@@ -22,6 +22,7 @@ import cn.hutool.poi.excel.ExcelUtil;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -60,6 +61,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor=Exception.class)
     public boolean saveRegistrationInfo(RegistrationInfoDto registrationInfoDto, Long matchId, Long teamId) {
         MatchInfoDto matchInfoDto = matchInfoService.findId(matchId);
         if (matchInfoDto == null) {
@@ -174,6 +176,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      * @return 申请处理结果
      */
     @Override
+    @Transactional(rollbackFor=Exception.class)
     public boolean saveApplyRegistrationInfo(Long id) {
         String registrationStatusWait = "审核";
         long countWait = registrationInfoRepository.countByIdAndRegistrationStatus(id, registrationStatusWait);
@@ -195,6 +198,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      * @return 申请处理结果
      */
     @Override
+    @Transactional(rollbackFor=Exception.class)
     public boolean deleteApplyRegistrationInfo(Long id) {
         String registrationStatusWait = "审核";
         long countWait = registrationInfoRepository.countByIdAndRegistrationStatus(id, registrationStatusWait);

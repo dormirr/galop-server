@@ -10,7 +10,9 @@ import cn.dormirr.coremodule.match.info.service.dto.MatchInfoDto;
 import cn.dormirr.coremodule.match.info.service.mapper.MatchInfoMapper;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -41,6 +43,8 @@ public class MatchInfoServiceImpl implements MatchInfoService {
      * @param matchInfoDto 请求创建的比赛信息
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void saveMatchInfo(MatchInfoDto matchInfoDto) {
         matchInfoRepository.save(matchInfoMapper.toEntity(matchInfoDto));
 

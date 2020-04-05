@@ -14,7 +14,9 @@ import cn.dormirr.coremodule.team.service.dto.TeamDto;
 import cn.dormirr.coremodule.team.service.mapper.TeamMapper;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -48,6 +50,8 @@ public class TeamServiceImpl implements TeamService {
      * @param teamDto 创建队伍的信息
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void saveTeam(TeamDto teamDto) {
         UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
         RoleDto roleDto = roleService.findByRoleName("队长");
@@ -126,6 +130,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 申请结果
      */
     @Override
+    @Transactional(rollbackFor=Exception.class)
     public boolean applyTeam(Long id) {
         UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
         String teamStateError = "拒绝";
@@ -245,6 +250,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 申请处理结果
      */
     @Override
+    @Transactional(rollbackFor=Exception.class)
     public boolean saveApplyTeam(Long id) {
         String teamStateWait = "审核";
         if (teamRepository.findByIdAndTeamState(id, teamStateWait) != null) {
@@ -264,6 +270,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 申请处理结果
      */
     @Override
+    @Transactional(rollbackFor=Exception.class)
     public boolean deleteApplyTeam(Long id) {
         String teamStateWait = "审核";
         if (teamRepository.findByIdAndTeamState(id, teamStateWait) != null) {
@@ -354,6 +361,8 @@ public class TeamServiceImpl implements TeamService {
      * @param teamDto 修改信息
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void saveMyTeam(TeamDto teamDto) {
         List<TeamDto> list = teamMapper.toDto(teamRepository.findAllByTeamId(teamDto.getTeamId()));
         for (TeamDto findTeamDto : list) {

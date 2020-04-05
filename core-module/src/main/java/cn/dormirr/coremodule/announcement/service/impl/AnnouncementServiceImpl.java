@@ -7,7 +7,9 @@ import cn.dormirr.coremodule.announcement.service.dto.AnnouncementDto;
 import cn.dormirr.coremodule.announcement.service.mapper.AnnouncementMapper;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -33,6 +35,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      * @param announcementDto 公告
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void saveAnnouncement(AnnouncementDto announcementDto) {
         announcementRepository.save(announcementMapper.toEntity(announcementDto));
     }
@@ -80,6 +84,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      * @param announcementDto 待删除公告 ID
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void deleteAnnouncement(AnnouncementDto announcementDto) {
         announcementRepository.deleteById(announcementDto.getId());
     }
@@ -90,6 +96,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      * @param announcementDto 待修改内容
      */
     @Override
+    @Async
+    @Transactional(rollbackFor=Exception.class)
     public void saveApplyAnnouncement(AnnouncementDto announcementDto) {
         announcementRepository.save(announcementMapper.toEntity(announcementDto));
     }
