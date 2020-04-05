@@ -71,6 +71,11 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
             return false;
         }
 
+        int teamSize = teamRepository.countAllByTeamId(teamId);
+        if (teamSize != matchInfoDto.getTeamSize()) {
+            return false;
+        }
+
         UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
         if (!teamDto.getUserByUserId().getId().equals(userDto.getId())) {
             return false;

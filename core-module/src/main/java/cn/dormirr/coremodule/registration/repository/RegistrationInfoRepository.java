@@ -44,4 +44,12 @@ public interface RegistrationInfoRepository extends JpaRepository<RegistrationIn
      * @return 查询结果
      */
     List<RegistrationInfoEntity> findAllByMatchInfoByMatchInfoIdAndRegistrationStatus(MatchInfoEntity matchInfoEntity, String registrationStatus);
+
+    /**
+     * 根据团队查询报名信息
+     *
+     * @param teamEntity 团队
+     * @return 查询结果
+     */
+    List<RegistrationInfoEntity> findAllByTeamByTeamId(TeamEntity teamEntity);
 }
