@@ -1,6 +1,7 @@
 package cn.dormirr.coremodule.match.info.service;
 
 import cn.dormirr.coremodule.match.info.service.dto.MatchInfoDto;
+import cn.dormirr.coremodule.match.result.service.dto.MatchResultDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

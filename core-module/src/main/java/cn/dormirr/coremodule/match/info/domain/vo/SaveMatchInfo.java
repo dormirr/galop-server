@@ -13,35 +13,53 @@ public class SaveMatchInfo implements Serializable {
     private Integer teamSize;
     private Integer championAward;
     private Integer decrementParameter;
+    private String matchType;
 
     public String getMatchName() {
         return matchName;
+    }
+
+    public void setMatchName(String matchName) {
+        this.matchName = matchName;
     }
 
     public Timestamp[] getDate() {
         return date;
     }
 
+    public void setDate(Timestamp[] date) {
+        this.date = date;
+    }
+
     public Integer getTeamSize() {
         return teamSize;
+    }
+
+    public void setTeamSize(Integer teamSize) {
+        this.teamSize = teamSize;
     }
 
     public Integer getChampionAward() {
         return championAward;
     }
 
+    public void setChampionAward(Integer championAward) {
+        this.championAward = championAward;
+    }
+
     public Integer getDecrementParameter() {
         return decrementParameter;
     }
 
-    @Override
-    public String toString() {
-        return "SaveMatch{" +
-                "matchName='" + matchName + '\'' +
-                ", date=" + Arrays.toString(date) +
-                ", teamSize=" + teamSize +
-                ", championAward=" + championAward +
-                ", decrementParameter=" + decrementParameter +
-                '}';
+    public void setDecrementParameter(Integer decrementParameter) {
+        this.decrementParameter = decrementParameter;
+    }
+
+    public String getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(String matchType) {
+        this.matchType = matchType;
     }
 }

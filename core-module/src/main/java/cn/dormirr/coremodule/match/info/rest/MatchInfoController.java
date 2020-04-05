@@ -32,6 +32,7 @@ public class MatchInfoController {
     @PreAuthorize("hasAnyAuthority('老师')")
     public ResponseEntity<Object> saveMatchInfo(@RequestBody SaveMatchInfo saveMatchInfo) {
         MatchInfoDto matchInfoDto = new MatchInfoDto();
+        matchInfoDto.setMatchType(saveMatchInfo.getMatchType());
         matchInfoDto.setMatchName(saveMatchInfo.getMatchName());
         matchInfoDto.setStartTime(saveMatchInfo.getDate()[0]);
         matchInfoDto.setEndTime(saveMatchInfo.getDate()[1]);

@@ -20,6 +20,7 @@ public class MatchInfoEntity implements Serializable {
     private Integer decrementParameter;
     private Timestamp startTime;
     private Timestamp endTime;
+    private String matchType;
 
     @Id
     @Column(name = "id", nullable = false, insertable = false, updatable = false)
@@ -112,6 +113,16 @@ public class MatchInfoEntity implements Serializable {
         this.endTime = endTime;
     }
 
+    @Basic
+    @Column(name = "match_type", nullable = false, length = 20)
+    public String getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(String matchType) {
+        this.matchType = matchType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -120,18 +131,54 @@ public class MatchInfoEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         MatchInfoEntity that = (MatchInfoEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(createTime, that.createTime) &&
-                Objects.equals(updateTime, that.updateTime) &&
-                Objects.equals(matchName, that.matchName) &&
-                Objects.equals(teamSize, that.teamSize) &&
-                Objects.equals(championAward, that.championAward) &&
-                Objects.equals(decrementParameter, that.decrementParameter);
+
+        if (id != null ? !id.equals(that.id) : that.id != null) {
+            return false;
+        }
+        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) {
+            return false;
+        }
+        if (updateTime != null ? !updateTime.equals(that.updateTime) : that.updateTime != null) {
+            return false;
+        }
+        if (matchName != null ? !matchName.equals(that.matchName) : that.matchName != null) {
+            return false;
+        }
+        if (teamSize != null ? !teamSize.equals(that.teamSize) : that.teamSize != null) {
+            return false;
+        }
+        if (championAward != null ? !championAward.equals(that.championAward) : that.championAward != null) {
+            return false;
+        }
+        if (decrementParameter != null ? !decrementParameter.equals(that.decrementParameter) : that.decrementParameter != null)
+            return false;
+        if (startTime != null ? !startTime.equals(that.startTime) : that.startTime != null) {
+            return false;
+        }
+        if (endTime != null ? !endTime.equals(that.endTime) : that.endTime != null) {
+            return false;
+        }
+        if (matchType != null ? !matchType.equals(that.matchType) : that.matchType != null) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createTime, updateTime, matchName, teamSize, championAward, decrementParameter);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
+        result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
+        result = 31 * result + (matchName != null ? matchName.hashCode() : 0);
+        result = 31 * result + (teamSize != null ? teamSize.hashCode() : 0);
+        result = 31 * result + (championAward != null ? championAward.hashCode() : 0);
+        result = 31 * result + (decrementParameter != null ? decrementParameter.hashCode() : 0);
+        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
+        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+        result = 31 * result + (matchType != null ? matchType.hashCode() : 0);
+        return result;
     }
 }

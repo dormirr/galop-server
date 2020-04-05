@@ -15,6 +15,7 @@ public class MatchInfoDto {
     private Integer decrementParameter;
     private Timestamp startTime;
     private Timestamp endTime;
+    private String matchType;
 
     public Long getId() {
         return id;
@@ -86,5 +87,13 @@ public class MatchInfoDto {
 
     public void setEndTime(Timestamp endTime) {
         this.endTime = endTime;
+    }
+
+    public String getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(String matchType) {
+        this.matchType = matchType;
     }
 }
