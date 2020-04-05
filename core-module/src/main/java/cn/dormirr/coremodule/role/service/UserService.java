@@ -1,6 +1,7 @@
 package cn.dormirr.coremodule.role.service;
 
 import cn.dormirr.coremodule.role.service.dto.UserDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -58,4 +59,37 @@ public interface UserService {
      * @return 查询结果
      */
     List<UserDto> findUserFightingCapacity();
+
+
+    /**
+     * 给用户发送密码邮件
+     *
+     * @param userDto 用户
+     */
+    void email(UserDto userDto);
+
+    /**
+     * 重置密码
+     *
+     * @param uuid uuid
+     */
+    void forget(String uuid);
+
+    /**
+     * 删除用户
+     *
+     * @param userNumber 学号
+     */
+    void removeUser(String userNumber);
+
+    /**
+     * 动态查询用户
+     *
+     * @param userDto  查询条件
+     * @param pageSize 每页数量
+     * @param current  第几页
+     * @param sorter   排序规则
+     * @return 查询结果
+     */
+    Page<UserDto> findUser(UserDto userDto, int pageSize, int current, String sorter);
 }
