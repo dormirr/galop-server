@@ -55,6 +55,10 @@ spring:
       enabled: true
       location: D:\IdeaProjects\galop-server\file\
 
+  mail:
+    host: smtp.qq.com
+    username: 1018729292@qq.com
+
 
 # 邮箱验证码有效时间/分钟
 code:
