@@ -163,6 +163,12 @@
             <version>${xerces.version}</version>
         </dependency>
 
+        <!-- Email 工具 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!-- 项目模块依赖 -->
         <dependency>
             <groupId>cn.dormirr</groupId>
