@@ -88,6 +88,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/avatar/**").permitAll()
                 // 模板
                 .antMatchers("/file/**").permitAll()
+                // 重置密码
+                .antMatchers("/role/forget").permitAll()
+                .antMatchers("/role/forget-code").permitAll()
 
                 // 其他请求都需要认证
                 .anyRequest()
