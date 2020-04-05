@@ -1,10 +1,12 @@
 package cn.dormirr.coremodule.registration.service;
 
+import cn.dormirr.coremodule.match.result.service.dto.MatchResultDto;
 import cn.dormirr.coremodule.registration.service.dto.RegistrationInfoDto;
 import org.springframework.data.domain.Page;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author ZhangTianCi
@@ -51,7 +53,7 @@ public interface RegistrationInfoService {
     /**
      * 根据比赛 ID 导出报名表
      *
-     * @param matchId  比赛 ID
+     * @param matchId 比赛 ID
      * @return 文件地址
      */
     String downloadRegistrationInfo(Long matchId);

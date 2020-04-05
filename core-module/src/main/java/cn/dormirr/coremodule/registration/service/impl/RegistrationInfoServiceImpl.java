@@ -11,6 +11,7 @@ import cn.dormirr.coremodule.registration.service.dto.RegistrationInfoDto;
 import cn.dormirr.coremodule.registration.service.mapper.RegistrationInfoMapper;
 import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
+import cn.dormirr.coremodule.team.repository.TeamRepository;
 import cn.dormirr.coremodule.team.service.TeamService;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
 import cn.dormirr.coremodule.team.service.mapper.TeamMapper;
@@ -37,8 +38,9 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
     private final RegistrationInfoMapper registrationInfoMapper;
     private final MatchInfoMapper matchInfoMapper;
     private final TeamMapper teamMapper;
+    private final TeamRepository teamRepository;
 
-    public RegistrationInfoServiceImpl(UserService userService, MatchInfoService matchInfoService, TeamService teamService, RegistrationInfoRepository registrationInfoRepository, RegistrationInfoMapper registrationInfoMapper, MatchInfoMapper matchInfoMapper, TeamMapper teamMapper) {
+    public RegistrationInfoServiceImpl(UserService userService, MatchInfoService matchInfoService, TeamService teamService, RegistrationInfoRepository registrationInfoRepository, RegistrationInfoMapper registrationInfoMapper, MatchInfoMapper matchInfoMapper, TeamMapper teamMapper, TeamRepository teamRepository) {
         this.userService = userService;
         this.matchInfoService = matchInfoService;
         this.teamService = teamService;
@@ -46,6 +48,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
         this.registrationInfoMapper = registrationInfoMapper;
         this.matchInfoMapper = matchInfoMapper;
         this.teamMapper = teamMapper;
+        this.teamRepository = teamRepository;
     }
 
     /**

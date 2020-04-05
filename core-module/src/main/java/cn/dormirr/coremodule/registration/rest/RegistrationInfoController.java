@@ -1,9 +1,8 @@
 package cn.dormirr.coremodule.registration.rest;
 
-import cn.dormirr.coremodule.registration.domain.vo.ApplyRegistrationInfo;
-import cn.dormirr.coremodule.registration.domain.vo.DownloadRegistrationInfo;
-import cn.dormirr.coremodule.registration.domain.vo.FindRegistrationInfo;
-import cn.dormirr.coremodule.registration.domain.vo.SaveRegistrationInfo;
+import cn.dormirr.coremodule.fighting.domain.vo.ChangeFightingCapacityRe;
+import cn.dormirr.coremodule.fighting.service.dto.FightingCapacityDto;
+import cn.dormirr.coremodule.registration.domain.vo.*;
 import cn.dormirr.coremodule.registration.service.RegistrationInfoService;
 import cn.dormirr.coremodule.registration.service.dto.RegistrationInfoDto;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
