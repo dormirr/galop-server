@@ -1,0 +1,39 @@
+package cn.dormirr.coremodule.fighting.service;
+
+import cn.dormirr.coremodule.fighting.domain.vo.ChangeMatchRe;
+import cn.dormirr.coremodule.fighting.service.dto.FightingCapacityDto;
+import cn.dormirr.coremodule.match.info.service.dto.MatchInfoDto;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+
+/**
+ * @author ZhangTianCi
+ */
+public interface FightingCapacityService {
+
+    /**
+     * 动态查询战斗力变化
+     *
+     * @param fightingCapacityDto 查询条件
+     * @param pageSize            每页数量
+     * @param current             第几页
+     * @param sorter              排序规则
+     * @return 查询结果
+     */
+    Page<FightingCapacityDto> findFightingCapacity(FightingCapacityDto fightingCapacityDto, int pageSize, int current, String sorter);
+
+    /**
+     * 查询战斗力变化
+     *
+     * @return 查询结果
+     */
+    List<FightingCapacityDto> changeFightingCapacity();
+
+    /**
+     * 查询所有比赛参与人数
+     *
+     * @return 查询结果
+     */
+    List<ChangeMatchRe> changeMatch();
+}
