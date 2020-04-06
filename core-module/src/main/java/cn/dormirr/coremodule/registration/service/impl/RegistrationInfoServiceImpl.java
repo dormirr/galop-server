@@ -61,7 +61,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      * @return 结果
      */
     @Override
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveRegistrationInfo(RegistrationInfoDto registrationInfoDto, Long matchId, Long teamId) {
         MatchInfoDto matchInfoDto = matchInfoService.findId(matchId);
         if (matchInfoDto == null) {
@@ -176,7 +176,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      * @return 申请处理结果
      */
     @Override
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveApplyRegistrationInfo(Long id) {
         String registrationStatusWait = "审核";
         long countWait = registrationInfoRepository.countByIdAndRegistrationStatus(id, registrationStatusWait);
@@ -198,7 +198,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      * @return 申请处理结果
      */
     @Override
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteApplyRegistrationInfo(Long id) {
         String registrationStatusWait = "审核";
         long countWait = registrationInfoRepository.countByIdAndRegistrationStatus(id, registrationStatusWait);
@@ -237,17 +237,20 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
         }
 
         List<List<String>> rows = new ArrayList<>();
-        rows.add(CollUtil.newArrayList("团队 ID", "团队名称", "团队简介", "团队战斗力", "队长学号", "队长名称"));
+        rows.add(CollUtil.newArrayList("团队 ID", "团队名称", "团队简介", "团队战斗力", "学号", "姓名"));
         for (RegistrationInfoDto registrationInfoDto : registrationInfoDtoList) {
-            List<String> row = CollUtil.newArrayList(
-                    registrationInfoDto.getTeamByTeamId().getId().toString(),
-                    registrationInfoDto.getTeamByTeamId().getTeamName(),
-                    registrationInfoDto.getTeamByTeamId().getTeamProfile(),
-                    registrationInfoDto.getTeamByTeamId().getTeamFightingCapacity().toString(),
-                    registrationInfoDto.getTeamByTeamId().getUserByUserId().getUserNumber(),
-                    registrationInfoDto.getTeamByTeamId().getUserByUserId().getUserName()
-            );
-            rows.add(row);
+            List<TeamDto> list = teamMapper.toDto(teamRepository.findAllByTeamId(registrationInfoDto.getTeamByTeamId().getTeamId()));
+            for (TeamDto teamDto : list) {
+                List<String> row = CollUtil.newArrayList(
+                        teamDto.getId().toString(),
+                        teamDto.getTeamName(),
+                        teamDto.getTeamProfile(),
+                        teamDto.getTeamFightingCapacity().toString(),
+                        teamDto.getUserByUserId().getUserNumber(),
+                        teamDto.getUserByUserId().getUserName()
+                );
+                rows.add(row);
+            }
         }
 
         String reFileName = IdUtil.fastSimpleUUID() + ".xlsx";
