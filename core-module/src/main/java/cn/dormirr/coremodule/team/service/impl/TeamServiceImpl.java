@@ -77,11 +77,11 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public Page<TeamDto> findTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
-        String descend = "descend";
-        String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
+        String descend = "ascend";
+        String[] sort = sorter != null ? sorter.split("_") : new String[]{"teamFightingCapacity", ""};
         Pageable pageable = descend.equals(sort[1]) ?
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0])) :
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0]));
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
 
         Specification<TeamEntity> specification = (Specification<TeamEntity>) (root, criteriaQuery, criteriaBuilder) -> {
             ArrayList<Predicate> andQuery = new ArrayList<>();
@@ -99,8 +99,8 @@ public class TeamServiceImpl implements TeamService {
 
             if (teamDto.getTeamName() != null) {
                 Path<String> teamName = root.get("teamName");
-                Predicate teamNameEqual = criteriaBuilder.like(teamName, "%" + teamDto.getTeamName() + "%");
-                andQuery.add(teamNameEqual);
+                Predicate teamNameLike = criteriaBuilder.like(teamName, "%" + teamDto.getTeamName() + "%");
+                andQuery.add(teamNameLike);
             }
 
             if (teamDto.getTeamFightingCapacity() != null) {
@@ -163,11 +163,11 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public Page<TeamDto> findApplyTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
-        String descend = "descend";
+        String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
         Pageable pageable = descend.equals(sort[1]) ?
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0])) :
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0]));
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
 
         UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
         RoleDto roleDto = roleService.findByRoleName("队长");
