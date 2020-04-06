@@ -250,11 +250,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Page<UserDto> findUser(UserDto userDto, int pageSize, int current, String sorter) {
-        String descend = "descend";
+        String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"userFightingCapacity", ""};
         Pageable pageable = descend.equals(sort[1]) ?
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0])) :
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0]));
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
 
         Specification<UserEntity> specification = (Specification<UserEntity>) (root, criteriaQuery, criteriaBuilder) -> {
             ArrayList<Predicate> andQuery = new ArrayList<>();
@@ -277,11 +277,8 @@ public class UserServiceImpl implements UserService {
 
         Page<UserEntity> data = userRepository.findAll(specification, pageable);
 
-        List<UserDto> list = new ArrayList<>();
-        for (
-                UserEntity userEntity : data.getContent()) {
-            list.add(userMapper.toDto(userEntity));
-        }
+        List<UserDto> list = userMapper.toDto(data.getContent());
+
         return new PageImpl<>(list, data.getPageable(), data.getTotalElements());
     }
 }
