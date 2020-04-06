@@ -36,7 +36,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void saveAnnouncement(AnnouncementDto announcementDto) {
         announcementRepository.save(announcementMapper.toEntity(announcementDto));
     }
@@ -52,19 +52,19 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      */
     @Override
     public Page<AnnouncementDto> findAnnouncement(AnnouncementDto announcementDto, int pageSize, int current, String sorter) {
-        String descend = "descend";
+        String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
         Pageable pageable = descend.equals(sort[1]) ?
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0])) :
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0]));
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
 
         Specification<AnnouncementEntity> specification = (Specification<AnnouncementEntity>) (root, criteriaQuery, criteriaBuilder) -> {
             ArrayList<Predicate> andQuery = new ArrayList<>();
 
             if (announcementDto.getAnnouncementTitle() != null) {
-                Path<Long> id = root.get("announcementTitle");
-                Predicate idEqual = criteriaBuilder.equal(id, announcementDto.getAnnouncementTitle());
-                andQuery.add(idEqual);
+                Path<String> announcementTitle = root.get("announcementTitle");
+                Predicate announcementTitleLike = criteriaBuilder.like(announcementTitle, "%" + announcementDto.getAnnouncementTitle() + "%");
+                andQuery.add(announcementTitleLike);
             }
 
             Predicate[] andPredicates = andQuery.toArray(new Predicate[0]);
@@ -85,7 +85,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void deleteAnnouncement(AnnouncementDto announcementDto) {
         announcementRepository.deleteById(announcementDto.getId());
     }
@@ -97,7 +97,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void saveApplyAnnouncement(AnnouncementDto announcementDto) {
         announcementRepository.save(announcementMapper.toEntity(announcementDto));
     }
