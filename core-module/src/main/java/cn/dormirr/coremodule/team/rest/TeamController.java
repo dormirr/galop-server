@@ -1,5 +1,8 @@
 package cn.dormirr.coremodule.team.rest;
 
+import cn.dormirr.commonmodule.utils.SecurityUtils;
+import cn.dormirr.coremodule.role.service.UserService;
+import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.team.domain.vo.*;
 import cn.dormirr.coremodule.team.service.TeamService;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
@@ -21,21 +24,24 @@ import java.util.Map;
 @RequestMapping("/team")
 public class TeamController {
     private final TeamService teamService;
+    private final UserService userService;
 
-    public TeamController(TeamService teamService) {
+    public TeamController(TeamService teamService, UserService userService) {
         this.teamService = teamService;
+        this.userService = userService;
     }
 
     @PostMapping("/save-team")
     @PreAuthorize("hasAnyAuthority('学生')")
     public ResponseEntity<Object> saveTeam(@RequestBody SaveTeam saveTeam) {
+        UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
         TeamDto teamDto = new TeamDto();
         teamDto.setTeamName(saveTeam.getTeamName());
         if (saveTeam.getTeamProfile() != null) {
             teamDto.setTeamProfile(saveTeam.getTeamProfile());
         }
 
-        teamService.saveTeam(teamDto);
+        teamService.saveTeam(teamDto,userDto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

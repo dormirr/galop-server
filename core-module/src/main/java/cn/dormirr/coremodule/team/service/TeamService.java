@@ -1,5 +1,6 @@
 package cn.dormirr.coremodule.team.service;
 
+import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
 import org.springframework.data.domain.Page;
 
@@ -12,8 +13,9 @@ public interface TeamService {
      * 创建队伍
      *
      * @param teamDto 创建队伍的信息
+     * @param userDto 创建人
      */
-    void saveTeam(TeamDto teamDto);
+    void saveTeam(TeamDto teamDto, UserDto userDto);
 
     /**
      * 动态查询队伍

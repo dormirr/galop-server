@@ -48,12 +48,12 @@ public class TeamServiceImpl implements TeamService {
      * 创建队伍
      *
      * @param teamDto 创建队伍的信息
+     * @param userDto 创建人
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
-    public void saveTeam(TeamDto teamDto) {
-        UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
+    @Transactional(rollbackFor = Exception.class)
+    public void saveTeam(TeamDto teamDto, UserDto userDto) {
         RoleDto roleDto = roleService.findByRoleName("队长");
 
         teamDto.setTeamFightingCapacity(userDto.getUserFightingCapacity());
