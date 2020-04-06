@@ -133,7 +133,7 @@ public class MatchResultServiceImpl implements MatchResultService {
 
                 List<TeamDto> listUser = teamMapper.toDto(teamRepository.findAllByTeamId(teamDto.getTeamId()));
                 for (TeamDto teamUserDto : listUser) {
-                    teamUserDto.setTeamFightingCapacity(teamUserDto.getTeamFightingCapacity() + reward);
+                    teamUserDto.setTeamFightingCapacity(teamUserDto.getTeamFightingCapacity() + reward*listUser.size());
                     teamRepository.save(teamMapper.toEntity(teamUserDto));
                 }
                 List<TeamDto> listUserAndState = teamMapper.toDto(teamRepository.findAllByTeamIdAndTeamState(teamDto.getTeamId(),"通过"));
