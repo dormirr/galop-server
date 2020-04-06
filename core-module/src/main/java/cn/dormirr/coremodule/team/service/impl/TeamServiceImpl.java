@@ -130,7 +130,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 申请结果
      */
     @Override
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public boolean applyTeam(Long id) {
         UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
         String teamStateError = "拒绝";
@@ -250,7 +250,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 申请处理结果
      */
     @Override
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveApplyTeam(Long id) {
         String teamStateWait = "审核";
         if (teamRepository.findByIdAndTeamState(id, teamStateWait) != null) {
@@ -270,7 +270,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 申请处理结果
      */
     @Override
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteApplyTeam(Long id) {
         String teamStateWait = "审核";
         if (teamRepository.findByIdAndTeamState(id, teamStateWait) != null) {
@@ -362,7 +362,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void saveMyTeam(TeamDto teamDto) {
         List<TeamDto> list = teamMapper.toDto(teamRepository.findAllByTeamId(teamDto.getTeamId()));
         for (TeamDto findTeamDto : list) {

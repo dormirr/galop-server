@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void saveUser(List<Object> user) {
         UserEntity users = new UserEntity();
         users.setUserNumber((String) user.get(0));
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void saveUserPortrait(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void saveUserNameAndEmail(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void saveUserPassword(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void saveUserRole(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -203,7 +203,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void forget(String uuid) {
         String userNumber = (String) redisUtils.get(uuid);
         if (userNumber == null) {
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void removeUser(String userNumber) {
         UserDto userDto = findByUserNumber(userNumber);
         fightingCapacityRepository.deleteAll(fightingCapacityRepository.findAllByUserByUserId(userMapper.toEntity(userDto)));
