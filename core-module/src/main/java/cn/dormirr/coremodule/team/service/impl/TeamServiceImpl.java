@@ -1,6 +1,7 @@
 package cn.dormirr.coremodule.team.service.impl;
 
 import cn.dormirr.commonmodule.utils.SecurityUtils;
+import cn.dormirr.coremodule.role.domain.UserEntity;
 import cn.dormirr.coremodule.role.service.RoleService;
 import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.RoleDto;
@@ -164,7 +165,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Page<TeamDto> findApplyTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
         String descend = "ascend";
-        String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
+        String[] sort = sorter != null ? sorter.replace(",", ".").split("_") : new String[]{"userByUserId.userFightingCapacity", ""};
         Pageable pageable = descend.equals(sort[1]) ?
                 PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
                 PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
@@ -187,44 +188,22 @@ public class TeamServiceImpl implements TeamService {
                 }
             }
 
-            if (teamDto.getId() != null) {
-                Path<Long> id = root.get("id");
-                Predicate idEqual = criteriaBuilder.equal(id, teamDto.getId());
-                andQuery.add(idEqual);
-            }
-
             if (teamDto.getTeamName() != null) {
                 Path<String> teamName = root.get("teamName");
-                Predicate teamNameEqual = criteriaBuilder.like(teamName, "%" + teamDto.getTeamName() + "%");
-                andQuery.add(teamNameEqual);
+                Predicate teamNameLike = criteriaBuilder.like(teamName, "%" + teamDto.getTeamName() + "%");
+                andQuery.add(teamNameLike);
             }
 
             if (teamDto.getTeamState() != null) {
                 Path<String> teamState = root.get("teamState");
-                Predicate teamStateEqual = criteriaBuilder.like(teamState, "%" + teamDto.getTeamState() + "%");
-                andQuery.add(teamStateEqual);
+                Predicate teamStateLike = criteriaBuilder.like(teamState, "%" + teamDto.getTeamState() + "%");
+                andQuery.add(teamStateLike);
             }
 
             if (teamDto.getTeamId() != null) {
                 Path<Long> teamId = root.get("teamId");
                 Predicate teamIdEqual = criteriaBuilder.equal(teamId, teamDto.getTeamId());
                 andQuery.add(teamIdEqual);
-            }
-
-            if (teamDto.getUserByUserId() != null) {
-                UserDto userDtoQuery = new UserDto();
-                if (teamDto.getUserByUserId().getId() != null) {
-                    userDtoQuery.setId(teamDto.getUserByUserId().getId());
-                }
-                if (teamDto.getUserByUserId().getUserName() != null) {
-                    userDtoQuery.setUserName(teamDto.getUserByUserId().getUserName());
-                }
-                if (teamDto.getUserByUserId().getUserFightingCapacity() != null) {
-                    userDtoQuery.setUserFightingCapacity(teamDto.getUserByUserId().getUserFightingCapacity());
-                }
-                Path<Long> userByUserId = root.get("userByUserId");
-                Predicate userByUserIdEqual = criteriaBuilder.equal(userByUserId, userMapper.toEntity(userDtoQuery));
-                andQuery.add(userByUserIdEqual);
             }
 
             Predicate[] andPredicates = andQuery.toArray(new Predicate[0]);
@@ -236,11 +215,7 @@ public class TeamServiceImpl implements TeamService {
 
         Page<TeamEntity> data = teamRepository.findAll(specification, pageable);
 
-        List<TeamDto> list = new ArrayList<>();
-        for (TeamEntity teamEntity : data.getContent()) {
-            list.add(teamMapper.toDto(teamEntity));
-        }
-        return new PageImpl<>(list, data.getPageable(), data.getTotalElements());
+        return new PageImpl<>(teamMapper.toDto(data.getContent()), data.getPageable(), data.getTotalElements());
     }
 
     /**
@@ -305,11 +280,11 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public Page<TeamDto> findMyTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
-        String descend = "descend";
-        String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
+        String descend = "ascend";
+        String[] sort = sorter != null ? sorter.split("_") : new String[]{"teamFightingCapacity", ""};
         Pageable pageable = descend.equals(sort[1]) ?
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0])) :
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0]));
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
 
         Specification<TeamEntity> specification = (Specification<TeamEntity>) (root, criteriaQuery, criteriaBuilder) -> {
             ArrayList<Predicate> andQuery = new ArrayList<>();
@@ -331,8 +306,8 @@ public class TeamServiceImpl implements TeamService {
 
             if (teamDto.getTeamName() != null) {
                 Path<String> teamName = root.get("teamName");
-                Predicate teamNameEqual = criteriaBuilder.like(teamName, "%" + teamDto.getTeamName() + "%");
-                andQuery.add(teamNameEqual);
+                Predicate teamNameLike = criteriaBuilder.like(teamName, "%" + teamDto.getTeamName() + "%");
+                andQuery.add(teamNameLike);
             }
 
             if (teamDto.getTeamFightingCapacity() != null) {
@@ -387,16 +362,16 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public Page<TeamDto> findOneTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
-        String descend = "descend";
-        String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
+        String descend = "ascend";
+        String[] sort = sorter != null ? sorter.replace(",", ".").split("_") : new String[]{"userByUserId.userFightingCapacity", ""};
         Pageable pageable = descend.equals(sort[1]) ?
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0])) :
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0]));
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
 
         Specification<TeamEntity> specification = (Specification<TeamEntity>) (root, criteriaQuery, criteriaBuilder) -> {
             ArrayList<Predicate> andQuery = new ArrayList<>();
 
-            Path<Long> teamState = root.get("teamState");
+            Path<String> teamState = root.get("teamState");
             Predicate teamStateEqual = criteriaBuilder.equal(teamState, "通过");
             andQuery.add(teamStateEqual);
 
@@ -410,11 +385,6 @@ public class TeamServiceImpl implements TeamService {
 
         Page<TeamEntity> data = teamRepository.findAll(specification, pageable);
 
-        List<TeamDto> list = new ArrayList<>();
-        for (
-                TeamEntity teamEntity : data.getContent()) {
-            list.add(teamMapper.toDto(teamEntity));
-        }
-        return new PageImpl<>(list, data.getPageable(), data.getTotalElements());
+        return new PageImpl<>(teamMapper.toDto(data.getContent()), data.getPageable(), data.getTotalElements());
     }
 }

@@ -9,22 +9,12 @@ import java.io.Serializable;
  * @author ZhangTianCi
  */
 public class FindApplyTeam implements Serializable {
-    private Long id;
     private String teamName;
     private String teamState;
     private Long teamId;
-    private UserEntity userByUserId;
     private Integer pageSize;
     private Integer current;
     private String sorter;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getTeamName() {
         return teamName;
@@ -48,14 +38,6 @@ public class FindApplyTeam implements Serializable {
 
     public void setTeamId(Long teamId) {
         this.teamId = teamId;
-    }
-
-    public UserEntity getUserByUserId() {
-        return userByUserId;
-    }
-
-    public void setUserByUserId(UserEntity userByUserId) {
-        this.userByUserId = userByUserId;
     }
 
     public Integer getPageSize() {

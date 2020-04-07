@@ -1,6 +1,8 @@
 package cn.dormirr.coremodule.team.rest;
 
 import cn.dormirr.commonmodule.utils.SecurityUtils;
+import cn.dormirr.coremodule.role.domain.RoleEntity;
+import cn.dormirr.coremodule.role.domain.UserEntity;
 import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.team.domain.vo.*;
@@ -41,7 +43,7 @@ public class TeamController {
             teamDto.setTeamProfile(saveTeam.getTeamProfile());
         }
 
-        teamService.saveTeam(teamDto,userDto);
+        teamService.saveTeam(teamDto, userDto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -108,9 +110,6 @@ public class TeamController {
     @PreAuthorize("hasAnyAuthority('学生')")
     public ResponseEntity<Object> findApplyTeam(FindApplyTeam findApplyTeam) {
         TeamDto teamDto = new TeamDto();
-        if (findApplyTeam.getId() != null) {
-            teamDto.setId(findApplyTeam.getId());
-        }
         if (findApplyTeam.getTeamName() != null) {
             teamDto.setTeamName(findApplyTeam.getTeamName());
         }
@@ -120,17 +119,7 @@ public class TeamController {
         if (findApplyTeam.getTeamId() != null) {
             teamDto.setTeamId(findApplyTeam.getTeamId());
         }
-        if (findApplyTeam.getUserByUserId() != null) {
-            if (findApplyTeam.getUserByUserId().getId() != null) {
-                teamDto.getUserByUserId().setId(findApplyTeam.getUserByUserId().getId());
-            }
-            if (findApplyTeam.getUserByUserId().getUserName() != null) {
-                teamDto.getUserByUserId().setUserName(findApplyTeam.getUserByUserId().getUserName());
-            }
-            if (findApplyTeam.getUserByUserId().getUserFightingCapacity() != null) {
-                teamDto.getUserByUserId().setUserFightingCapacity(findApplyTeam.getUserByUserId().getUserFightingCapacity());
-            }
-        }
+
         int pageSize = findApplyTeam.getPageSize();
         int current = findApplyTeam.getCurrent();
         String sorter = null;
@@ -264,10 +253,10 @@ public class TeamController {
     public ResponseEntity<Object> saveMyTeam(@RequestBody SaveMyTeam saveMyTeam) {
         TeamDto teamDto = new TeamDto();
         teamDto.setTeamId(saveMyTeam.getTeamId());
-        if(saveMyTeam.getTeamName()!=null){
+        if (saveMyTeam.getTeamName() != null) {
             teamDto.setTeamName(saveMyTeam.getTeamName());
         }
-        if(saveMyTeam.getTeamProfile()!=null){
+        if (saveMyTeam.getTeamProfile() != null) {
             teamDto.setTeamProfile(saveMyTeam.getTeamProfile());
         }
 
