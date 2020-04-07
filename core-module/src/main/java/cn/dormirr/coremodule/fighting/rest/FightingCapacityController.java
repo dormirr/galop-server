@@ -35,16 +35,6 @@ public class FightingCapacityController {
     @GetMapping("/find-fighting-capacity")
     @PreAuthorize("hasAnyAuthority('学生')")
     public ResponseEntity<Object> findFightingCapacity(FindFightingCapacity findFightingCapacity) {
-        FightingCapacityDto fightingCapacityDto = new FightingCapacityDto();
-
-        if (findFightingCapacity.getMatchInfoByMatchInfoId() != null) {
-            if (findFightingCapacity.getMatchInfoByMatchInfoId().getId() != null) {
-                fightingCapacityDto.getMatchInfoByMatchInfoId().setId(findFightingCapacity.getMatchInfoByMatchInfoId().getId());
-            }
-            if (findFightingCapacity.getMatchInfoByMatchInfoId().getMatchName() != null) {
-                fightingCapacityDto.getMatchInfoByMatchInfoId().setMatchName(findFightingCapacity.getMatchInfoByMatchInfoId().getMatchName());
-            }
-        }
         int pageSize = findFightingCapacity.getPageSize();
         int current = findFightingCapacity.getCurrent();
         String sorter = null;
@@ -52,7 +42,7 @@ public class FightingCapacityController {
             sorter = findFightingCapacity.getSorter();
         }
 
-        Page<FightingCapacityDto> data = fightingCapacityService.findFightingCapacity(fightingCapacityDto, pageSize, current, sorter);
+        Page<FightingCapacityDto> data = fightingCapacityService.findFightingCapacity(pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> result = new HashMap<>(5) {{
