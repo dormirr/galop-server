@@ -152,19 +152,16 @@ public class MatchInfoEntity implements Serializable {
         if (championAward != null ? !championAward.equals(that.championAward) : that.championAward != null) {
             return false;
         }
-        if (decrementParameter != null ? !decrementParameter.equals(that.decrementParameter) : that.decrementParameter != null)
+        if (decrementParameter != null ? !decrementParameter.equals(that.decrementParameter) : that.decrementParameter != null) {
             return false;
+        }
         if (startTime != null ? !startTime.equals(that.startTime) : that.startTime != null) {
             return false;
         }
         if (endTime != null ? !endTime.equals(that.endTime) : that.endTime != null) {
             return false;
         }
-        if (matchType != null ? !matchType.equals(that.matchType) : that.matchType != null) {
-            return false;
-        }
-
-        return true;
+        return matchType != null ? matchType.equals(that.matchType) : that.matchType == null;
     }
 
     @Override

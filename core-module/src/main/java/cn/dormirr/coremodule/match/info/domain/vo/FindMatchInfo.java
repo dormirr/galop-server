@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class FindMatchInfo implements Serializable {
     private Long id;
     private String matchName;
+    private String matchType;
     private Integer pageSize;
     private Integer current;
     private String sorter;
@@ -26,6 +27,14 @@ public class FindMatchInfo implements Serializable {
 
     public void setMatchName(String matchName) {
         this.matchName = matchName;
+    }
+
+    public String getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(String matchType) {
+        this.matchType = matchType;
     }
 
     public Integer getPageSize() {

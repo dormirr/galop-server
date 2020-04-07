@@ -54,6 +54,9 @@ public class MatchInfoController {
         if (findMatchInfo.getMatchName() != null) {
             matchInfoDto.setMatchName(findMatchInfo.getMatchName());
         }
+        if (findMatchInfo.getMatchType() != null) {
+            matchInfoDto.setMatchType(findMatchInfo.getMatchType());
+        }
         int pageSize = findMatchInfo.getPageSize();
         int current = findMatchInfo.getCurrent();
         String sorter = null;

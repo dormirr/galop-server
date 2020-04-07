@@ -44,7 +44,7 @@ public class MatchInfoServiceImpl implements MatchInfoService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void saveMatchInfo(MatchInfoDto matchInfoDto) {
         matchInfoRepository.save(matchInfoMapper.toEntity(matchInfoDto));
 
@@ -77,7 +77,7 @@ public class MatchInfoServiceImpl implements MatchInfoService {
      */
     @Override
     public Page<MatchInfoDto> findMatchInfo(MatchInfoDto matchInfoDto, int pageSize, int current, String sorter) {
-        String descend = "descend";
+        String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
         Pageable pageable = descend.equals(sort[1]) ?
                 PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
@@ -94,8 +94,14 @@ public class MatchInfoServiceImpl implements MatchInfoService {
 
             if (matchInfoDto.getMatchName() != null) {
                 Path<String> matchName = root.get("matchName");
-                Predicate matchNameEqual = criteriaBuilder.like(matchName, "%" + matchInfoDto.getMatchName() + "%");
-                andQuery.add(matchNameEqual);
+                Predicate matchNameLike = criteriaBuilder.like(matchName, "%" + matchInfoDto.getMatchName() + "%");
+                andQuery.add(matchNameLike);
+            }
+
+            if (matchInfoDto.getMatchType() != null) {
+                Path<String> matchType = root.get("matchType");
+                Predicate matchTypeLike = criteriaBuilder.like(matchType, "%" + matchInfoDto.getMatchType() + "%");
+                andQuery.add(matchTypeLike);
             }
 
             Predicate[] andPredicates = andQuery.toArray(new Predicate[0]);
