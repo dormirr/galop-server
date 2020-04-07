@@ -9,6 +9,7 @@ import cn.dormirr.coremodule.match.info.service.mapper.MatchInfoMapper;
 import cn.dormirr.coremodule.match.result.repository.MatchResultRepository;
 import cn.dormirr.coremodule.match.result.service.mapper.MatchResultMapper;
 import cn.dormirr.coremodule.registration.repository.RegistrationInfoRepository;
+import cn.dormirr.coremodule.role.domain.RoleEntity;
 import cn.dormirr.coremodule.role.domain.UserEntity;
 import cn.dormirr.coremodule.role.repository.UserRepository;
 import cn.dormirr.coremodule.role.service.RoleService;
@@ -167,7 +168,19 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> findUserFightingCapacity() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "userFightingCapacity"));
 
-        Page<UserEntity> data = userRepository.findAll(pageable);
+        Specification<UserEntity> specification = (Specification<UserEntity>) (root, criteriaQuery, criteriaBuilder) -> {
+            ArrayList<Predicate> andQuery = new ArrayList<>();
+
+            RoleDto roleDto = roleService.findByRoleName("学生");
+            Path<RoleEntity> roleByRoleId = root.get("roleByRoleId");
+            Predicate roleByRoleIdEqual = criteriaBuilder.equal(roleByRoleId, roleMapper.toEntity(roleDto));
+            andQuery.add(roleByRoleIdEqual);
+
+            Predicate[] andPredicates = andQuery.toArray(new Predicate[0]);
+            return criteriaBuilder.and(andPredicates);
+        };
+
+        Page<UserEntity> data = userRepository.findAll(specification, pageable);
 
         return userMapper.toDto(data.getContent());
     }
@@ -261,8 +274,8 @@ public class UserServiceImpl implements UserService {
 
             if (userDto.getUserName() != null) {
                 Path<String> userName = root.get("userName");
-                Predicate userNameEqual = criteriaBuilder.like(userName, "%" + userDto.getUserName() + "%");
-                andQuery.add(userNameEqual);
+                Predicate userNameLike = criteriaBuilder.like(userName, "%" + userDto.getUserName() + "%");
+                andQuery.add(userNameLike);
             }
 
             if (userDto.getUserNumber() != null) {
