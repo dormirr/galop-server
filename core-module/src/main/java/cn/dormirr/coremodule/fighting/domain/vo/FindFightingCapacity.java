@@ -8,18 +8,9 @@ import java.io.Serializable;
  * @author ZhangTianCi
  */
 public class FindFightingCapacity implements Serializable {
-    private MatchInfoEntity matchInfoByMatchInfoId;
     private Integer pageSize;
     private Integer current;
     private String sorter;
-
-    public MatchInfoEntity getMatchInfoByMatchInfoId() {
-        return matchInfoByMatchInfoId;
-    }
-
-    public void setMatchInfoByMatchInfoId(MatchInfoEntity matchInfoByMatchInfoId) {
-        this.matchInfoByMatchInfoId = matchInfoByMatchInfoId;
-    }
 
     public Integer getPageSize() {
         return pageSize;

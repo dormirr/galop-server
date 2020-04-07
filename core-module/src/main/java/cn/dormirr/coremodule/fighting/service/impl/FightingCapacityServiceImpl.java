@@ -46,19 +46,18 @@ public class FightingCapacityServiceImpl implements FightingCapacityService {
     /**
      * 动态查询战斗力变化
      *
-     * @param fightingCapacityDto 查询条件
      * @param pageSize            每页数量
      * @param current             第几页
      * @param sorter              排序规则
      * @return 查询结果
      */
     @Override
-    public Page<FightingCapacityDto> findFightingCapacity(FightingCapacityDto fightingCapacityDto, int pageSize, int current, String sorter) {
-        String descend = "descend";
+    public Page<FightingCapacityDto> findFightingCapacity(int pageSize, int current, String sorter) {
+        String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
         Pageable pageable = descend.equals(sort[1]) ?
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0])) :
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0]));
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
 
         Specification<FightingCapacityEntity> specification = (Specification<FightingCapacityEntity>) (root, criteriaQuery, criteriaBuilder) -> {
             ArrayList<Predicate> andQuery = new ArrayList<>();
@@ -67,19 +66,6 @@ public class FightingCapacityServiceImpl implements FightingCapacityService {
             Path<Long> userByUserId = root.get("userByUserId");
             Predicate userByUserIdEqual = criteriaBuilder.equal(userByUserId, userMapper.toEntity(userDto));
             andQuery.add(userByUserIdEqual);
-
-            if (fightingCapacityDto.getMatchInfoByMatchInfoId() != null) {
-                MatchInfoDto matchInfoDtoQuery = new MatchInfoDto();
-                if (fightingCapacityDto.getMatchInfoByMatchInfoId().getId() != null) {
-                    matchInfoDtoQuery.setId(fightingCapacityDto.getMatchInfoByMatchInfoId().getId());
-                }
-                if (fightingCapacityDto.getMatchInfoByMatchInfoId().getMatchName() != null) {
-                    matchInfoDtoQuery.setMatchName(fightingCapacityDto.getMatchInfoByMatchInfoId().getMatchName());
-                }
-                Path<Long> matchInfoByMatchInfoId = root.get("matchInfoByMatchInfoId");
-                Predicate matchInfoByMatchInfoIdEqual = criteriaBuilder.equal(matchInfoByMatchInfoId, matchInfoMapper.toEntity(matchInfoDtoQuery));
-                andQuery.add(matchInfoByMatchInfoIdEqual);
-            }
 
             Predicate[] andPredicates = andQuery.toArray(new Predicate[0]);
             return criteriaBuilder.and(andPredicates);

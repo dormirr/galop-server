@@ -14,13 +14,12 @@ public interface FightingCapacityService {
     /**
      * 动态查询战斗力变化
      *
-     * @param fightingCapacityDto 查询条件
      * @param pageSize            每页数量
      * @param current             第几页
      * @param sorter              排序规则
      * @return 查询结果
      */
-    Page<FightingCapacityDto> findFightingCapacity(FightingCapacityDto fightingCapacityDto, int pageSize, int current, String sorter);
+    Page<FightingCapacityDto> findFightingCapacity(int pageSize, int current, String sorter);
 
     /**
      * 查询战斗力变化
