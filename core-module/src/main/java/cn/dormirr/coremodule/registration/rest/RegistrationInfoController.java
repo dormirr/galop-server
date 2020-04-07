@@ -66,22 +66,6 @@ public class RegistrationInfoController {
         if (findRegistrationInfo.getRegistrationStatus() != null) {
             registrationInfoDto.setRegistrationStatus(findRegistrationInfo.getRegistrationStatus());
         }
-        if (findRegistrationInfo.getMatchInfoByMatchInfoId() != null) {
-            if (findRegistrationInfo.getMatchInfoByMatchInfoId().getId() != null) {
-                registrationInfoDto.getMatchInfoByMatchInfoId().setId(findRegistrationInfo.getMatchInfoByMatchInfoId().getId());
-            }
-            if (findRegistrationInfo.getMatchInfoByMatchInfoId().getMatchName() != null) {
-                registrationInfoDto.getMatchInfoByMatchInfoId().setMatchName(findRegistrationInfo.getMatchInfoByMatchInfoId().getMatchName());
-            }
-        }
-        if (findRegistrationInfo.getTeamByTeamId() != null) {
-            if (findRegistrationInfo.getTeamByTeamId().getId() != null) {
-                registrationInfoDto.getTeamByTeamId().setId(findRegistrationInfo.getTeamByTeamId().getId());
-            }
-            if (findRegistrationInfo.getTeamByTeamId().getTeamName() != null) {
-                registrationInfoDto.getTeamByTeamId().setTeamName(findRegistrationInfo.getTeamByTeamId().getTeamName());
-            }
-        }
         int pageSize = findRegistrationInfo.getPageSize();
         int current = findRegistrationInfo.getCurrent();
         String sorter = null;

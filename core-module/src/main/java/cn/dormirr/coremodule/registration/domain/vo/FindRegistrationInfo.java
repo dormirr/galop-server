@@ -10,8 +10,6 @@ import java.io.Serializable;
  */
 public class FindRegistrationInfo implements Serializable {
     private String registrationStatus;
-    private MatchInfoEntity matchInfoByMatchInfoId;
-    private TeamEntity teamByTeamId;
     private Integer pageSize;
     private Integer current;
     private String sorter;
@@ -22,22 +20,6 @@ public class FindRegistrationInfo implements Serializable {
 
     public void setRegistrationStatus(String registrationStatus) {
         this.registrationStatus = registrationStatus;
-    }
-
-    public MatchInfoEntity getMatchInfoByMatchInfoId() {
-        return matchInfoByMatchInfoId;
-    }
-
-    public void setMatchInfoByMatchInfoId(MatchInfoEntity matchInfoByMatchInfoId) {
-        this.matchInfoByMatchInfoId = matchInfoByMatchInfoId;
-    }
-
-    public TeamEntity getTeamByTeamId() {
-        return teamByTeamId;
-    }
-
-    public void setTeamByTeamId(TeamEntity teamByTeamId) {
-        this.teamByTeamId = teamByTeamId;
     }
 
     public Integer getPageSize() {

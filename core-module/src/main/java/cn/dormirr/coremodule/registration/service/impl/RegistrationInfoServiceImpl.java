@@ -30,6 +30,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author ZhangTianCi
+ */
 @Service
 public class RegistrationInfoServiceImpl implements RegistrationInfoService {
     private final UserService userService;
@@ -115,45 +118,19 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      */
     @Override
     public Page<RegistrationInfoDto> findRegistrationInfo(RegistrationInfoDto registrationInfoDto, int pageSize, int current, String sorter) {
-        String descend = "descend";
-        String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
+        String descend = "ascend";
+        String[] sort = sorter != null ? sorter.replace(",", ".").split("_") : new String[]{"matchInfoByMatchInfoId.id", ""};
         Pageable pageable = descend.equals(sort[1]) ?
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0])) :
-                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0]));
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
 
         Specification<RegistrationInfoEntity> specification = (Specification<RegistrationInfoEntity>) (root, criteriaQuery, criteriaBuilder) -> {
             ArrayList<Predicate> andQuery = new ArrayList<>();
 
             if (registrationInfoDto.getRegistrationStatus() != null) {
-                Path<Long> registrationStatus = root.get("registrationStatus");
-                Predicate registrationStatusEqual = criteriaBuilder.equal(registrationStatus, registrationInfoDto.getRegistrationStatus());
-                andQuery.add(registrationStatusEqual);
-            }
-
-            if (registrationInfoDto.getMatchInfoByMatchInfoId() != null) {
-                MatchInfoDto matchInfoDtoQuery = new MatchInfoDto();
-                if (registrationInfoDto.getMatchInfoByMatchInfoId().getId() != null) {
-                    matchInfoDtoQuery.setId(registrationInfoDto.getMatchInfoByMatchInfoId().getId());
-                }
-                if (registrationInfoDto.getMatchInfoByMatchInfoId().getMatchName() != null) {
-                    matchInfoDtoQuery.setMatchName(registrationInfoDto.getMatchInfoByMatchInfoId().getMatchName());
-                }
-                Path<Long> matchInfoByMatchInfoId = root.get("matchInfoByMatchInfoId");
-                Predicate matchInfoByMatchInfoIdEqual = criteriaBuilder.equal(matchInfoByMatchInfoId, matchInfoMapper.toEntity(matchInfoDtoQuery));
-                andQuery.add(matchInfoByMatchInfoIdEqual);
-            }
-
-            if (registrationInfoDto.getTeamByTeamId() != null) {
-                TeamDto teamDtoQuery = new TeamDto();
-                if (registrationInfoDto.getTeamByTeamId().getId() != null) {
-                    teamDtoQuery.setId(registrationInfoDto.getTeamByTeamId().getId());
-                }
-                if (registrationInfoDto.getTeamByTeamId().getTeamName() != null) {
-                    teamDtoQuery.setTeamName(registrationInfoDto.getTeamByTeamId().getTeamName());
-                }
-                Path<Long> teamByTeamId = root.get("teamByTeamId");
-                Predicate teamByTeamIdEqual = criteriaBuilder.equal(teamByTeamId, teamMapper.toEntity(teamDtoQuery));
-                andQuery.add(teamByTeamIdEqual);
+                Path<String> registrationStatus = root.get("registrationStatus");
+                Predicate registrationStatusLike = criteriaBuilder.like(registrationStatus, "%" + registrationInfoDto.getRegistrationStatus() + "%");
+                andQuery.add(registrationStatusLike);
             }
 
             Predicate[] andPredicates = andQuery.toArray(new Predicate[0]);
