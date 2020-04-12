@@ -110,7 +110,7 @@ public class UserController {
             e.printStackTrace();
         }
 
-        String userPortrait = "http://localhost:8080/avatar/" + user.getUserNumber() + fileType;
+        String userPortrait = "https://localhost:8080/avatar/" + user.getUserNumber() + fileType;
         user.setUserPortrait(userPortrait);
         userService.saveUserPortrait(user);
 
