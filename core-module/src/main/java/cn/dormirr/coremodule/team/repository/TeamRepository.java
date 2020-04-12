@@ -80,6 +80,14 @@ public interface TeamRepository extends JpaRepository<TeamEntity, Long>, JpaSpec
     List<TeamEntity> findAllByUserByUserIdAndTeamState(UserEntity userEntity, String teamState);
 
     /**
+     * 查询用户的队伍
+     *
+     * @param userEntity 用户
+     * @return 用户的队伍
+     */
+    List<TeamEntity> findAllByUserByUserId(UserEntity userEntity);
+
+    /**
      * 根据团队查询人数
      *
      * @param teamId 团队

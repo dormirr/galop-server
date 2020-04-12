@@ -16,6 +16,7 @@ import cn.dormirr.coremodule.match.result.service.mapper.MatchResultMapper;
 import cn.dormirr.coremodule.role.repository.UserRepository;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.role.service.mapper.UserMapper;
+import cn.dormirr.coremodule.team.domain.TeamEntity;
 import cn.dormirr.coremodule.team.repository.TeamRepository;
 import cn.dormirr.coremodule.team.service.TeamService;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
@@ -25,6 +26,9 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
@@ -36,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Future;
 
 /**
@@ -129,16 +134,10 @@ public class MatchResultServiceImpl implements MatchResultService {
 
                 count[0]++;
 
-                int reward = matchInfoDto.getChampionAward() -
-                        (matchResultDto.getRanking() - 1) *
-                                matchInfoDto.getDecrementParameter();
+                int reward = matchInfoDto.getChampionAward() - (matchResultDto.getRanking() - 1)
+                        * matchInfoDto.getDecrementParameter();
 
-                List<TeamDto> listUser = teamMapper.toDto(teamRepository.findAllByTeamId(teamDto.getTeamId()));
-                for (TeamDto teamUserDto : listUser) {
-                    teamUserDto.setTeamFightingCapacity(teamUserDto.getTeamFightingCapacity() + reward*listUser.size());
-                    teamRepository.save(teamMapper.toEntity(teamUserDto));
-                }
-                List<TeamDto> listUserAndState = teamMapper.toDto(teamRepository.findAllByTeamIdAndTeamState(teamDto.getTeamId(),"通过"));
+                List<TeamDto> listUserAndState = teamMapper.toDto(teamRepository.findAllByTeamIdAndTeamState(teamDto.getTeamId(), "通过"));
                 for (TeamDto teamUserDto : listUserAndState) {
                     FightingCapacityDto fightingCapacityDto = new FightingCapacityDto();
                     fightingCapacityDto.setMatchInfoByMatchInfoId(matchResultDto.getMatchInfoByMatchInfoId());
@@ -147,8 +146,32 @@ public class MatchResultServiceImpl implements MatchResultService {
                     fightingCapacityRepository.save(fightingCapacityMapper.toEntity(fightingCapacityDto));
 
                     UserDto userDto = userMapper.toDto(teamUserDto.getUserByUserId());
-                    userDto.setUserFightingCapacity(userDto.getUserFightingCapacity() + reward);
+                    int rewardUser = userDto.getUserFightingCapacity() + reward;
+                    userDto.setUserFightingCapacity(Math.max(rewardUser, 0));
                     userRepository.save(userMapper.toEntity(userDto));
+
+                    List<TeamDto> listUser = teamMapper.toDto(teamRepository.findAllByUserByUserId(teamUserDto.getUserByUserId()));
+                    for (TeamDto teamUser : listUser) {
+                        List<TeamDto> team = teamMapper.toDto(teamRepository.findAllByTeamId(teamUser.getTeamId()));
+                        for (TeamDto teamDto1:team){
+                            teamDto1.setTeamFightingCapacity(teamDto1.getTeamFightingCapacity() + reward);
+                            teamRepository.save(teamMapper.toEntity(teamDto1));
+                        }
+                    }
+                }
+
+                for (TeamDto teamUserDto : listUserAndState) {
+                    List<TeamDto> listUser = teamMapper.toDto(teamRepository.findAllByUserByUserId(teamUserDto.getUserByUserId()));
+                    for (TeamDto teamUser : listUser) {
+                        List<TeamDto> team = teamMapper.toDto(teamRepository.findAllByTeamId(teamUser.getTeamId()));
+                        for (TeamDto teamDto1:team){
+                            if (teamDto1.getTeamFightingCapacity() >= 0) {
+                                continue;
+                            }
+                            teamDto1.setTeamFightingCapacity(0);
+                            teamRepository.save(teamMapper.toEntity(teamDto1));
+                        }
+                    }
                 }
             }
         };
