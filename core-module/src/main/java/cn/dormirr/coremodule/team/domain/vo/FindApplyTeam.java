@@ -1,8 +1,5 @@
 package cn.dormirr.coremodule.team.domain.vo;
 
-import cn.dormirr.coremodule.role.domain.RoleEntity;
-import cn.dormirr.coremodule.role.domain.UserEntity;
-
 import java.io.Serializable;
 
 /**

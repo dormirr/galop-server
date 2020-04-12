@@ -11,21 +11,4 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface TeamMapper extends BaseMapper<TeamDto, TeamEntity> {
 
-    /**
-     * TeamEntity 转 TeamDTO
-     *
-     * @param teamEntity TeamEntity
-     * @return TeamDTO
-     */
-    @Override
-    TeamDto toDto(TeamEntity teamEntity);
-
-    /**
-     * TeamDTO 转 TeamEntity
-     *
-     * @param teamDto TeamDTO
-     * @return TeamEntity
-     */
-    @Override
-    TeamEntity toEntity(TeamDto teamDto);
 }

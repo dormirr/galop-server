@@ -1,8 +1,5 @@
 package cn.dormirr.coremodule.registration.domain.vo;
 
-import cn.dormirr.coremodule.match.info.domain.MatchInfoEntity;
-import cn.dormirr.coremodule.team.domain.TeamEntity;
-
 import java.io.Serializable;
 
 /**

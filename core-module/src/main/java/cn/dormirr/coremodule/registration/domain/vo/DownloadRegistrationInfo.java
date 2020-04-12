@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author ZhangTianCi
  */
-public class DownloadRegistrationInfo  implements Serializable {
+public class DownloadRegistrationInfo implements Serializable {
     private Long matchId;
 
     public Long getMatchId() {

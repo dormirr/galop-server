@@ -2,7 +2,6 @@ package cn.dormirr.coremodule.match.info.domain.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Arrays;
 
 /**
  * @author ZhangTianCi

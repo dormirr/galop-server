@@ -1,7 +1,5 @@
 package cn.dormirr.coremodule.fighting.domain.vo;
 
-import cn.dormirr.coremodule.match.info.domain.MatchInfoEntity;
-
 import java.io.Serializable;
 
 /**

@@ -6,8 +6,8 @@ import java.io.Serializable;
  * @author ZhangTianCi
  */
 public class ChangeMatchRe implements Serializable {
-    private  String match;
-    private  Integer value;
+    private String match;
+    private Integer value;
 
     public ChangeMatchRe() {
     }

@@ -34,15 +34,15 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    @Value("${loginCode.expiration}")
-    private Long expiration;
-    private Boolean singleLogin = false;
     private final SecurityProperties properties;
     private final RedisUtils redisUtils;
     private final UserDetailsService userDetailsService;
     private final OnlineUserService onlineUserService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    @Value("${loginCode.expiration}")
+    private Long expiration;
+    private Boolean singleLogin = false;
 
     public AuthController(SecurityProperties properties, RedisUtils redisUtils, UserDetailsService userDetailsService, OnlineUserService onlineUserService, TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
         this.properties = properties;
@@ -76,8 +76,8 @@ public class AuthController {
         // 返回 Token 与 用户信息
         Map<String, Object> authInfo = new HashMap<>(3) {{
             put("token", properties.getTokenStartWith() + token);
-            put("authority",jwtUser.getRoleByRoleId().getRoleName());
-            put("id",jwtUser.getUsername());
+            put("authority", jwtUser.getRoleByRoleId().getRoleName());
+            put("id", jwtUser.getUsername());
             put("status", 200);
         }};
 

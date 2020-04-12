@@ -11,12 +11,4 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserMapper extends BaseMapper<UserDto, UserEntity> {
 
-    /**
-     * UserEntity 转 UserDTO
-     *
-     * @param userEntity UserEntity
-     * @return UserDTO
-     */
-    @Override
-    UserDto toDto(UserEntity userEntity);
 }

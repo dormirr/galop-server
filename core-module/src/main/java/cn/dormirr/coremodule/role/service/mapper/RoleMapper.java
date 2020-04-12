@@ -11,21 +11,4 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface RoleMapper extends BaseMapper<RoleDto, RoleEntity> {
 
-    /**
-     * DTO 转 RoleEntity
-     *
-     * @param roleDto RoleDTO
-     * @return RoleEntity
-     */
-    @Override
-    RoleEntity toEntity(RoleDto roleDto);
-
-    /**
-     * RoleEntity 转 RoleDTO
-     *
-     * @param roleEntity roleEntity
-     * @return RoleDTO
-     */
-    @Override
-    RoleDto toDto(RoleEntity roleEntity);
 }
