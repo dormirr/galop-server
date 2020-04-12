@@ -228,6 +228,19 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 重置密码
+     *
+     * @param userDto 用户
+     */
+    @Override
+    @Async
+    @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
+    public void forgetUser(UserDto userDto) {
+        userRepository.save(userMapper.toEntity(userDto));
+    }
+
+    /**
      * 删除用户
      *
      * @param userNumber 学号

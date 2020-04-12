@@ -270,10 +270,10 @@ public class UserController {
 
     @PutMapping("/forget-user")
     @PreAuthorize("hasAnyAuthority('老师')")
-    public ResponseEntity<Object> forgetUser(String userNumber) {
-        UserDto userDto = userService.findByUserNumber(userNumber);
+    public ResponseEntity<Object> forgetUser(@RequestBody ForgetUser userNumber) {
+        UserDto userDto = userService.findByUserNumber(userNumber.getUserNumber());
         userDto.setUserPassword("$2a$10$vE9HsVXW3aWQM1bbeojfB.aaFHS19Ts7C/GWjgCE3Gs8Escp/3/om");
-        userRepository.save(userMapper.toEntity(userDto));
+        userService.forgetUser(userDto);
 
         // 返回成功信息
         Map<String, Object> status = new HashMap<>(1) {{

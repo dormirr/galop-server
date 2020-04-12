@@ -75,6 +75,14 @@ public interface UserService {
      */
     void forget(String uuid);
 
+
+    /**
+     * 重置密码
+     *
+     * @param userDto 用户
+     */
+    void forgetUser(UserDto userDto);
+
     /**
      * 删除用户
      *
