@@ -81,6 +81,10 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
             return false;
         }
 
+        if (matchInfoDto.getStartTime().before(new Date())) {
+            return false;
+        }
+
         TeamDto teamDto = teamService.findId(teamId);
         if (teamDto == null) {
             return false;
@@ -229,7 +233,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
             List<TeamDto> list = teamMapper.toDto(teamRepository.findAllByTeamId(registrationInfoDto.getTeamByTeamId().getTeamId()));
             for (TeamDto teamDto : list) {
                 List<String> row = CollUtil.newArrayList(
-                        teamDto.getId().toString(),
+                        teamDto.getTeamId().toString(),
                         teamDto.getTeamName(),
                         teamDto.getTeamProfile(),
                         teamDto.getTeamFightingCapacity().toString(),
