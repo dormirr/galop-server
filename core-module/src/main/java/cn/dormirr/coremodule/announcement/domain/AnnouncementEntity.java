@@ -3,6 +3,7 @@ package cn.dormirr.coremodule.announcement.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  * @author ZhangTianCi
@@ -75,31 +76,16 @@ public class AnnouncementEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         AnnouncementEntity that = (AnnouncementEntity) o;
-
-        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
-            return false;
-        }
-        if (getCreateTime() != null ? !getCreateTime().equals(that.getCreateTime()) : that.getCreateTime() != null) {
-            return false;
-        }
-        if (getUpdateTime() != null ? !getUpdateTime().equals(that.getUpdateTime()) : that.getUpdateTime() != null) {
-            return false;
-        }
-        if (getAnnouncementTitle() != null ? !getAnnouncementTitle().equals(that.getAnnouncementTitle()) : that.getAnnouncementTitle() != null) {
-            return false;
-        }
-        return getAnnouncementContent() != null ? getAnnouncementContent().equals(that.getAnnouncementContent()) : that.getAnnouncementContent() == null;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getAnnouncementTitle(), that.getAnnouncementTitle()) &&
+                Objects.equals(getAnnouncementContent(), that.getAnnouncementContent());
     }
 
     @Override
     public int hashCode() {
-        int result = getId() != null ? getId().hashCode() : 0;
-        result = 31 * result + (getCreateTime() != null ? getCreateTime().hashCode() : 0);
-        result = 31 * result + (getUpdateTime() != null ? getUpdateTime().hashCode() : 0);
-        result = 31 * result + (getAnnouncementTitle() != null ? getAnnouncementTitle().hashCode() : 0);
-        result = 31 * result + (getAnnouncementContent() != null ? getAnnouncementContent().hashCode() : 0);
-        return result;
+        return Objects.hash(getId(), getCreateTime(), getUpdateTime(), getAnnouncementTitle(), getAnnouncementContent());
     }
 }

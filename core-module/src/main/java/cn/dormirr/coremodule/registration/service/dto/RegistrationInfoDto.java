@@ -4,6 +4,7 @@ import cn.dormirr.coremodule.match.info.domain.MatchInfoEntity;
 import cn.dormirr.coremodule.team.domain.TeamEntity;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  * @author ZhangTianCi
@@ -62,5 +63,35 @@ public class RegistrationInfoDto {
 
     public void setTeamByTeamId(TeamEntity teamByTeamId) {
         this.teamByTeamId = teamByTeamId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RegistrationInfoDto that = (RegistrationInfoDto) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getRegistrationStatus(), that.getRegistrationStatus()) &&
+                Objects.equals(getMatchInfoByMatchInfoId(), that.getMatchInfoByMatchInfoId()) &&
+                Objects.equals(getTeamByTeamId(), that.getTeamByTeamId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCreateTime(), getUpdateTime(), getRegistrationStatus(), getMatchInfoByMatchInfoId(), getTeamByTeamId());
+    }
+
+    @Override
+    public String toString() {
+        return "RegistrationInfoDto{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", registrationStatus='" + registrationStatus + '\'' +
+                ", matchInfoByMatchInfoId=" + matchInfoByMatchInfoId +
+                ", teamByTeamId=" + teamByTeamId +
+                '}';
     }
 }

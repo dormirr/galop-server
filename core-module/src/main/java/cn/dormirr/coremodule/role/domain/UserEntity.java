@@ -115,27 +115,24 @@ public class UserEntity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(createTime, that.createTime) &&
-                Objects.equals(updateTime, that.updateTime) &&
-                Objects.equals(userNumber, that.userNumber) &&
-                Objects.equals(userName, that.userName) &&
-                Objects.equals(userPassword, that.userPassword) &&
-                Objects.equals(userEmail, that.userEmail) &&
-                Objects.equals(userPortrait, that.userPortrait) &&
-                Objects.equals(userFightingCapacity, that.userFightingCapacity);
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getUserNumber(), that.getUserNumber()) &&
+                Objects.equals(getUserName(), that.getUserName()) &&
+                Objects.equals(getUserPassword(), that.getUserPassword()) &&
+                Objects.equals(getUserEmail(), that.getUserEmail()) &&
+                Objects.equals(getUserPortrait(), that.getUserPortrait()) &&
+                Objects.equals(getUserFightingCapacity(), that.getUserFightingCapacity()) &&
+                Objects.equals(getRoleByRoleId(), that.getRoleByRoleId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createTime, updateTime, userNumber, userName, userPassword, userEmail, userPortrait, userFightingCapacity);
+        return Objects.hash(getId(), getCreateTime(), getUpdateTime(), getUserNumber(), getUserName(), getUserPassword(), getUserEmail(), getUserPortrait(), getUserFightingCapacity(), getRoleByRoleId());
     }
 
     @ManyToOne
@@ -146,5 +143,21 @@ public class UserEntity implements Serializable {
 
     public void setRoleByRoleId(RoleEntity roleByRoleId) {
         this.roleByRoleId = roleByRoleId;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", userNumber='" + userNumber + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userPortrait='" + userPortrait + '\'' +
+                ", userFightingCapacity=" + userFightingCapacity +
+                ", roleByRoleId=" + roleByRoleId +
+                '}';
     }
 }

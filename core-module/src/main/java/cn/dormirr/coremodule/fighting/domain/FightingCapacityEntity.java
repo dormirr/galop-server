@@ -6,6 +6,7 @@ import cn.dormirr.coremodule.role.domain.UserEntity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  * @author ZhangTianCi
@@ -69,28 +70,18 @@ public class FightingCapacityEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         FightingCapacityEntity that = (FightingCapacityEntity) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) {
-            return false;
-        }
-        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) {
-            return false;
-        }
-        if (updateTime != null ? !updateTime.equals(that.updateTime) : that.updateTime != null) {
-            return false;
-        }
-        return reward != null ? reward.equals(that.reward) : that.reward == null;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getReward(), that.getReward()) &&
+                Objects.equals(getMatchInfoByMatchInfoId(), that.getMatchInfoByMatchInfoId()) &&
+                Objects.equals(getUserByUserId(), that.getUserByUserId());
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
-        result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
-        result = 31 * result + (reward != null ? reward.hashCode() : 0);
-        return result;
+        return Objects.hash(getId(), getCreateTime(), getUpdateTime(), getReward(), getMatchInfoByMatchInfoId(), getUserByUserId());
     }
 
     @ManyToOne
@@ -111,5 +102,17 @@ public class FightingCapacityEntity implements Serializable {
 
     public void setUserByUserId(UserEntity userByUserId) {
         this.userByUserId = userByUserId;
+    }
+
+    @Override
+    public String toString() {
+        return "FightingCapacityEntity{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", reward=" + reward +
+                ", matchInfoByMatchInfoId=" + matchInfoByMatchInfoId +
+                ", userByUserId=" + userByUserId +
+                '}';
     }
 }

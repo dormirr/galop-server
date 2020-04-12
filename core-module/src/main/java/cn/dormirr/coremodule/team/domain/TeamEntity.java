@@ -6,6 +6,7 @@ import cn.dormirr.coremodule.role.domain.UserEntity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  * @author ZhangTianCi
@@ -107,50 +108,24 @@ public class TeamEntity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         TeamEntity that = (TeamEntity) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) {
-            return false;
-        }
-        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) {
-            return false;
-        }
-        if (updateTime != null ? !updateTime.equals(that.updateTime) : that.updateTime != null) {
-            return false;
-        }
-        if (teamName != null ? !teamName.equals(that.teamName) : that.teamName != null) {
-            return false;
-        }
-        if (teamProfile != null ? !teamProfile.equals(that.teamProfile) : that.teamProfile != null) {
-            return false;
-        }
-        if (teamState != null ? !teamState.equals(that.teamState) : that.teamState != null) {
-            return false;
-        }
-        if (teamFightingCapacity != null ? !teamFightingCapacity.equals(that.teamFightingCapacity) : that.teamFightingCapacity != null) {
-            return false;
-        }
-        return teamId != null ? teamId.equals(that.teamId) : that.teamId == null;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getTeamName(), that.getTeamName()) &&
+                Objects.equals(getTeamProfile(), that.getTeamProfile()) &&
+                Objects.equals(getTeamState(), that.getTeamState()) &&
+                Objects.equals(getTeamFightingCapacity(), that.getTeamFightingCapacity()) &&
+                Objects.equals(getTeamId(), that.getTeamId()) &&
+                Objects.equals(getUserByUserId(), that.getUserByUserId()) &&
+                Objects.equals(getRoleByRoleId(), that.getRoleByRoleId());
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
-        result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
-        result = 31 * result + (teamName != null ? teamName.hashCode() : 0);
-        result = 31 * result + (teamProfile != null ? teamProfile.hashCode() : 0);
-        result = 31 * result + (teamState != null ? teamState.hashCode() : 0);
-        result = 31 * result + (teamFightingCapacity != null ? teamFightingCapacity.hashCode() : 0);
-        result = 31 * result + (teamId != null ? teamId.hashCode() : 0);
-        return result;
+        return Objects.hash(getId(), getCreateTime(), getUpdateTime(), getTeamName(), getTeamProfile(), getTeamState(), getTeamFightingCapacity(), getTeamId(), getUserByUserId(), getRoleByRoleId());
     }
 
     @ManyToOne

@@ -131,51 +131,37 @@ public class MatchInfoEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         MatchInfoEntity that = (MatchInfoEntity) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) {
-            return false;
-        }
-        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) {
-            return false;
-        }
-        if (updateTime != null ? !updateTime.equals(that.updateTime) : that.updateTime != null) {
-            return false;
-        }
-        if (matchName != null ? !matchName.equals(that.matchName) : that.matchName != null) {
-            return false;
-        }
-        if (teamSize != null ? !teamSize.equals(that.teamSize) : that.teamSize != null) {
-            return false;
-        }
-        if (championAward != null ? !championAward.equals(that.championAward) : that.championAward != null) {
-            return false;
-        }
-        if (decrementParameter != null ? !decrementParameter.equals(that.decrementParameter) : that.decrementParameter != null) {
-            return false;
-        }
-        if (startTime != null ? !startTime.equals(that.startTime) : that.startTime != null) {
-            return false;
-        }
-        if (endTime != null ? !endTime.equals(that.endTime) : that.endTime != null) {
-            return false;
-        }
-        return matchType != null ? matchType.equals(that.matchType) : that.matchType == null;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getMatchName(), that.getMatchName()) &&
+                Objects.equals(getTeamSize(), that.getTeamSize()) &&
+                Objects.equals(getChampionAward(), that.getChampionAward()) &&
+                Objects.equals(getDecrementParameter(), that.getDecrementParameter()) &&
+                Objects.equals(getStartTime(), that.getStartTime()) &&
+                Objects.equals(getEndTime(), that.getEndTime()) &&
+                Objects.equals(getMatchType(), that.getMatchType());
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
-        result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
-        result = 31 * result + (matchName != null ? matchName.hashCode() : 0);
-        result = 31 * result + (teamSize != null ? teamSize.hashCode() : 0);
-        result = 31 * result + (championAward != null ? championAward.hashCode() : 0);
-        result = 31 * result + (decrementParameter != null ? decrementParameter.hashCode() : 0);
-        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
-        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
-        result = 31 * result + (matchType != null ? matchType.hashCode() : 0);
-        return result;
+        return Objects.hash(getId(), getCreateTime(), getUpdateTime(), getMatchName(), getTeamSize(), getChampionAward(), getDecrementParameter(), getStartTime(), getEndTime(), getMatchType());
+    }
+
+    @Override
+    public String toString() {
+        return "MatchInfoEntity{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", matchName='" + matchName + '\'' +
+                ", teamSize=" + teamSize +
+                ", championAward=" + championAward +
+                ", decrementParameter=" + decrementParameter +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", matchType='" + matchType + '\'' +
+                '}';
     }
 }

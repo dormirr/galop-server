@@ -4,6 +4,7 @@ import cn.dormirr.coremodule.match.info.domain.MatchInfoEntity;
 import cn.dormirr.coremodule.role.domain.UserEntity;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  * @author ZhangTianCi
@@ -62,5 +63,35 @@ public class FightingCapacityDto {
 
     public void setUserByUserId(UserEntity userByUserId) {
         this.userByUserId = userByUserId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FightingCapacityDto that = (FightingCapacityDto) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getReward(), that.getReward()) &&
+                Objects.equals(getMatchInfoByMatchInfoId(), that.getMatchInfoByMatchInfoId()) &&
+                Objects.equals(getUserByUserId(), that.getUserByUserId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCreateTime(), getUpdateTime(), getReward(), getMatchInfoByMatchInfoId(), getUserByUserId());
+    }
+
+    @Override
+    public String toString() {
+        return "FightingCapacityDto{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", reward=" + reward +
+                ", matchInfoByMatchInfoId=" + matchInfoByMatchInfoId +
+                ", userByUserId=" + userByUserId +
+                '}';
     }
 }

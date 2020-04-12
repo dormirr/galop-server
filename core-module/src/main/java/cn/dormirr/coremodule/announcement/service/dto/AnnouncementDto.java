@@ -1,6 +1,7 @@
 package cn.dormirr.coremodule.announcement.service.dto;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  * @author ZhangTianCi
@@ -50,5 +51,37 @@ public class AnnouncementDto {
 
     public void setAnnouncementContent(String announcementContent) {
         this.announcementContent = announcementContent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AnnouncementDto that = (AnnouncementDto) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getAnnouncementTitle(), that.getAnnouncementTitle()) &&
+                Objects.equals(getAnnouncementContent(), that.getAnnouncementContent());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCreateTime(), getUpdateTime(), getAnnouncementTitle(), getAnnouncementContent());
+    }
+
+    @Override
+    public String toString() {
+        return "AnnouncementDto{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", announcementTitle='" + announcementTitle + '\'' +
+                ", announcementContent='" + announcementContent + '\'' +
+                '}';
     }
 }

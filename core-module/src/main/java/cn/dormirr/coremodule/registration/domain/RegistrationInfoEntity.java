@@ -6,7 +6,11 @@ import cn.dormirr.coremodule.team.domain.TeamEntity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 
+/**
+ * @author ZhangTianCi
+ */
 @Entity
 @Table(name = "registration_info", schema = "galop", catalog = "galop")
 public class RegistrationInfoEntity implements Serializable {
@@ -60,42 +64,20 @@ public class RegistrationInfoEntity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         RegistrationInfoEntity that = (RegistrationInfoEntity) o;
-
-        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
-            return false;
-        }
-        if (getCreateTime() != null ? !getCreateTime().equals(that.getCreateTime()) : that.getCreateTime() != null) {
-            return false;
-        }
-        if (getUpdateTime() != null ? !getUpdateTime().equals(that.getUpdateTime()) : that.getUpdateTime() != null) {
-            return false;
-        }
-        if (getRegistrationStatus() != null ? !getRegistrationStatus().equals(that.getRegistrationStatus()) : that.getRegistrationStatus() != null) {
-            return false;
-        }
-        if (getMatchInfoByMatchInfoId() != null ? !getMatchInfoByMatchInfoId().equals(that.getMatchInfoByMatchInfoId()) : that.getMatchInfoByMatchInfoId() != null) {
-            return false;
-        }
-        return getTeamByTeamId() != null ? getTeamByTeamId().equals(that.getTeamByTeamId()) : that.getTeamByTeamId() == null;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getRegistrationStatus(), that.getRegistrationStatus()) &&
+                Objects.equals(getMatchInfoByMatchInfoId(), that.getMatchInfoByMatchInfoId()) &&
+                Objects.equals(getTeamByTeamId(), that.getTeamByTeamId());
     }
 
     @Override
     public int hashCode() {
-        int result = getId() != null ? getId().hashCode() : 0;
-        result = 31 * result + (getCreateTime() != null ? getCreateTime().hashCode() : 0);
-        result = 31 * result + (getUpdateTime() != null ? getUpdateTime().hashCode() : 0);
-        result = 31 * result + (getRegistrationStatus() != null ? getRegistrationStatus().hashCode() : 0);
-        result = 31 * result + (getMatchInfoByMatchInfoId() != null ? getMatchInfoByMatchInfoId().hashCode() : 0);
-        result = 31 * result + (getTeamByTeamId() != null ? getTeamByTeamId().hashCode() : 0);
-        return result;
+        return Objects.hash(getId(), getCreateTime(), getUpdateTime(), getRegistrationStatus(), getMatchInfoByMatchInfoId(), getTeamByTeamId());
     }
 
     @ManyToOne
@@ -116,5 +98,17 @@ public class RegistrationInfoEntity implements Serializable {
 
     public void setTeamByTeamId(TeamEntity teamByTeamId) {
         this.teamByTeamId = teamByTeamId;
+    }
+
+    @Override
+    public String toString() {
+        return "RegistrationInfoEntity{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", registrationStatus='" + registrationStatus + '\'' +
+                ", matchInfoByMatchInfoId=" + matchInfoByMatchInfoId +
+                ", teamByTeamId=" + teamByTeamId +
+                '}';
     }
 }

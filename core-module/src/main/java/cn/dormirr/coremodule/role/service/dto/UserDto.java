@@ -2,6 +2,8 @@ package cn.dormirr.coremodule.role.service.dto;
 
 import cn.dormirr.coremodule.role.domain.RoleEntity;
 
+import java.util.Objects;
+
 /**
  * @author ZhangTianCi
  */
@@ -95,50 +97,22 @@ public class UserDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
-
-        if (!getId().equals(userDto.getId())) {
-            return false;
-        }
-        if (!getUserNumber().equals(userDto.getUserNumber())) {
-            return false;
-        }
-        if (!getUserName().equals(userDto.getUserName())) {
-            return false;
-        }
-        if (!getUserPassword().equals(userDto.getUserPassword())) {
-            return false;
-        }
-        if (getUserEmail() != null ? !getUserEmail().equals(userDto.getUserEmail()) : userDto.getUserEmail() != null) {
-            return false;
-        }
-        if (!getUserPortrait().equals(userDto.getUserPortrait())) {
-            return false;
-        }
-        if (!getUserFightingCapacity().equals(userDto.getUserFightingCapacity())) {
-            return false;
-        }
-        return getRoleByRoleId().equals(userDto.getRoleByRoleId());
+        return Objects.equals(getId(), userDto.getId()) &&
+                Objects.equals(getUserNumber(), userDto.getUserNumber()) &&
+                Objects.equals(getUserName(), userDto.getUserName()) &&
+                Objects.equals(getUserPassword(), userDto.getUserPassword()) &&
+                Objects.equals(getUserEmail(), userDto.getUserEmail()) &&
+                Objects.equals(getUserPortrait(), userDto.getUserPortrait()) &&
+                Objects.equals(getUserFightingCapacity(), userDto.getUserFightingCapacity()) &&
+                Objects.equals(getRoleByRoleId(), userDto.getRoleByRoleId());
     }
 
     @Override
     public int hashCode() {
-        int result = getId().hashCode();
-        result = 31 * result + getUserNumber().hashCode();
-        result = 31 * result + getUserName().hashCode();
-        result = 31 * result + getUserPassword().hashCode();
-        result = 31 * result + (getUserEmail() != null ? getUserEmail().hashCode() : 0);
-        result = 31 * result + getUserPortrait().hashCode();
-        result = 31 * result + getUserFightingCapacity().hashCode();
-        result = 31 * result + getRoleByRoleId().hashCode();
-        return result;
+        return Objects.hash(getId(), getUserNumber(), getUserName(), getUserPassword(), getUserEmail(), getUserPortrait(), getUserFightingCapacity(), getRoleByRoleId());
     }
 
     @Override

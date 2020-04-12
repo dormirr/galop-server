@@ -1,6 +1,7 @@
 package cn.dormirr.coremodule.match.info.service.dto;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  * @author ZhangTianCi
@@ -95,5 +96,43 @@ public class MatchInfoDto {
 
     public void setMatchType(String matchType) {
         this.matchType = matchType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MatchInfoDto that = (MatchInfoDto) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getMatchName(), that.getMatchName()) &&
+                Objects.equals(getTeamSize(), that.getTeamSize()) &&
+                Objects.equals(getChampionAward(), that.getChampionAward()) &&
+                Objects.equals(getDecrementParameter(), that.getDecrementParameter()) &&
+                Objects.equals(getStartTime(), that.getStartTime()) &&
+                Objects.equals(getEndTime(), that.getEndTime()) &&
+                Objects.equals(getMatchType(), that.getMatchType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCreateTime(), getUpdateTime(), getMatchName(), getTeamSize(), getChampionAward(), getDecrementParameter(), getStartTime(), getEndTime(), getMatchType());
+    }
+
+    @Override
+    public String toString() {
+        return "MatchInfoDto{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", matchName='" + matchName + '\'' +
+                ", teamSize=" + teamSize +
+                ", championAward=" + championAward +
+                ", decrementParameter=" + decrementParameter +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", matchType='" + matchType + '\'' +
+                '}';
     }
 }
