@@ -1,12 +1,7 @@
 package cn.dormirr.coremodule.registration.service;
 
-import cn.dormirr.coremodule.match.result.service.dto.MatchResultDto;
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.registration.service.dto.RegistrationInfoDto;
-import org.springframework.data.domain.Page;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * @author ZhangTianCi
@@ -32,7 +27,7 @@ public interface RegistrationInfoService {
      * @param sorter              排序规则
      * @return 查询结果
      */
-    Page<RegistrationInfoDto> findRegistrationInfo(RegistrationInfoDto registrationInfoDto, int pageSize, int current, String sorter);
+    PageUtils<RegistrationInfoDto> findRegistrationInfo(RegistrationInfoDto registrationInfoDto, int pageSize, int current, String sorter);
 
     /**
      * 同意申请

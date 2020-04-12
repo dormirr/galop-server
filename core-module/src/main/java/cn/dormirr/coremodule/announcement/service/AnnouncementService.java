@@ -1,7 +1,7 @@
 package cn.dormirr.coremodule.announcement.service;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.announcement.service.dto.AnnouncementDto;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public interface AnnouncementService {
      * @param sorter          排序规则
      * @return 查询结果
      */
-    Page<AnnouncementDto> findAnnouncement(AnnouncementDto announcementDto, int pageSize, int current, String sorter);
+    PageUtils<AnnouncementDto> findAnnouncement(AnnouncementDto announcementDto, int pageSize, int current, String sorter);
 
     /**
      * 删除公告

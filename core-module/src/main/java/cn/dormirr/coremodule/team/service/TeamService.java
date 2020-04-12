@@ -1,8 +1,8 @@
 package cn.dormirr.coremodule.team.service;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
-import org.springframework.data.domain.Page;
 
 /**
  * @author ZhangTianCi
@@ -26,7 +26,7 @@ public interface TeamService {
      * @param sorter   排序规则
      * @return 查询结果
      */
-    Page<TeamDto> findTeam(TeamDto teamDto, int pageSize, int current, String sorter);
+    PageUtils<TeamDto> findTeam(TeamDto teamDto, int pageSize, int current, String sorter);
 
     /**
      * 申请加入团队
@@ -45,7 +45,7 @@ public interface TeamService {
      * @param sorter   排序规则
      * @return 查询结果
      */
-    Page<TeamDto> findApplyTeam(TeamDto teamDto, int pageSize, int current, String sorter);
+    PageUtils<TeamDto> findApplyTeam(TeamDto teamDto, int pageSize, int current, String sorter);
 
     /**
      * 同意申请
@@ -80,7 +80,7 @@ public interface TeamService {
      * @param sorter   排序规则
      * @return 查询结果
      */
-    Page<TeamDto> findMyTeam(TeamDto teamDto, int pageSize, int current, String sorter);
+    PageUtils<TeamDto> findMyTeam(TeamDto teamDto, int pageSize, int current, String sorter);
 
     /**
      * 修改团队信息
@@ -98,5 +98,5 @@ public interface TeamService {
      * @param sorter   排序规则
      * @return 查询结果
      */
-    Page<TeamDto> findOneTeam(TeamDto teamDto, int pageSize, int current, String sorter);
+    PageUtils<TeamDto> findOneTeam(TeamDto teamDto, int pageSize, int current, String sorter);
 }

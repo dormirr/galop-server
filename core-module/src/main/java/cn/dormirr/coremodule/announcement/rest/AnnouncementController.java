@@ -1,11 +1,11 @@
 package cn.dormirr.coremodule.announcement.rest;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.announcement.domain.vo.ApplyAnnouncement;
 import cn.dormirr.coremodule.announcement.domain.vo.FindAnnouncement;
 import cn.dormirr.coremodule.announcement.domain.vo.SaveAnnouncement;
 import cn.dormirr.coremodule.announcement.service.AnnouncementService;
 import cn.dormirr.coremodule.announcement.service.dto.AnnouncementDto;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -71,7 +71,7 @@ public class AnnouncementController {
             sorter = findAnnouncement.getSorter();
         }
 
-        Page<AnnouncementDto> data = announcementService.findAnnouncement(announcementDto, pageSize, current, sorter);
+        PageUtils<AnnouncementDto> data = announcementService.findAnnouncement(announcementDto, pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> result = new HashMap<>(5) {{

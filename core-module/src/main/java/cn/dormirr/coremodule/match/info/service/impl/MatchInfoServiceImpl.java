@@ -1,5 +1,6 @@
 package cn.dormirr.coremodule.match.info.service.impl;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.announcement.repository.AnnouncementRepository;
 import cn.dormirr.coremodule.announcement.service.dto.AnnouncementDto;
 import cn.dormirr.coremodule.announcement.service.mapper.AnnouncementMapper;
@@ -8,7 +9,14 @@ import cn.dormirr.coremodule.match.info.repository.MatchInfoRepository;
 import cn.dormirr.coremodule.match.info.service.MatchInfoService;
 import cn.dormirr.coremodule.match.info.service.dto.MatchInfoDto;
 import cn.dormirr.coremodule.match.info.service.mapper.MatchInfoMapper;
-import org.springframework.data.domain.*;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -26,6 +34,7 @@ import java.util.List;
  * @author ZhangTianCi
  */
 @Service
+@CacheConfig(cacheNames = "matchInfo")
 public class MatchInfoServiceImpl implements MatchInfoService {
     private final MatchInfoRepository matchInfoRepository;
     private final MatchInfoMapper matchInfoMapper;
@@ -45,6 +54,7 @@ public class MatchInfoServiceImpl implements MatchInfoService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {@CacheEvict(cacheNames = "matchInfo", allEntries = true), @CacheEvict(cacheNames = "announcement", allEntries = true)})
     public void saveMatchInfo(MatchInfoDto matchInfoDto) {
         matchInfoRepository.save(matchInfoMapper.toEntity(matchInfoDto));
 
@@ -76,7 +86,8 @@ public class MatchInfoServiceImpl implements MatchInfoService {
      * @return 查询结果
      */
     @Override
-    public Page<MatchInfoDto> findMatchInfo(MatchInfoDto matchInfoDto, int pageSize, int current, String sorter) {
+    @Cacheable
+    public PageUtils<MatchInfoDto> findMatchInfo(MatchInfoDto matchInfoDto, int pageSize, int current, String sorter) {
         String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
         Pageable pageable = descend.equals(sort[1]) ?
@@ -110,11 +121,7 @@ public class MatchInfoServiceImpl implements MatchInfoService {
 
         Page<MatchInfoEntity> data = matchInfoRepository.findAll(specification, pageable);
 
-        List<MatchInfoDto> list = new ArrayList<>();
-        for (MatchInfoEntity matchInfoEntity : data.getContent()) {
-            list.add(matchInfoMapper.toDto(matchInfoEntity));
-        }
-        return new PageImpl<>(list, data.getPageable(), data.getTotalElements());
+        return new PageUtils<>(matchInfoMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
     }
 
     /**
@@ -124,6 +131,7 @@ public class MatchInfoServiceImpl implements MatchInfoService {
      * @return 查询结果
      */
     @Override
+    @Cacheable
     public MatchInfoDto findId(Long id) {
         return matchInfoRepository.findById(id).isPresent() ? matchInfoMapper.toDto(matchInfoRepository.findById(id).get()) : null;
     }
@@ -134,6 +142,7 @@ public class MatchInfoServiceImpl implements MatchInfoService {
      * @return 查询结果
      */
     @Override
+    @Cacheable
     public List<MatchInfoDto> ongoingMatchInfo() {
         return matchInfoMapper.toDto(
                 matchInfoRepository.findAllByEndTimeGreaterThan(

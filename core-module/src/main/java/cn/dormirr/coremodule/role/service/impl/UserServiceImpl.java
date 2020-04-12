@@ -1,13 +1,9 @@
 package cn.dormirr.coremodule.role.service.impl;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.commonmodule.utils.RedisUtils;
-import cn.dormirr.coremodule.fighting.domain.FightingCapacityEntity;
 import cn.dormirr.coremodule.fighting.repository.FightingCapacityRepository;
-import cn.dormirr.coremodule.fighting.service.mapper.FightingCapacityMapper;
-import cn.dormirr.coremodule.match.info.service.MatchInfoService;
-import cn.dormirr.coremodule.match.info.service.mapper.MatchInfoMapper;
 import cn.dormirr.coremodule.match.result.repository.MatchResultRepository;
-import cn.dormirr.coremodule.match.result.service.mapper.MatchResultMapper;
 import cn.dormirr.coremodule.registration.repository.RegistrationInfoRepository;
 import cn.dormirr.coremodule.role.domain.RoleEntity;
 import cn.dormirr.coremodule.role.domain.UserEntity;
@@ -19,14 +15,19 @@ import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.role.service.mapper.RoleMapper;
 import cn.dormirr.coremodule.role.service.mapper.UserMapper;
 import cn.dormirr.coremodule.security.config.SecurityProperties;
-import cn.dormirr.coremodule.team.domain.TeamEntity;
 import cn.dormirr.coremodule.team.repository.TeamRepository;
-import cn.dormirr.coremodule.team.service.TeamService;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
 import cn.dormirr.coremodule.team.service.mapper.TeamMapper;
 import cn.hutool.core.util.IdUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -44,9 +45,8 @@ import java.util.concurrent.TimeUnit;
  * @author ZhangTianCi
  */
 @Service
+@CacheConfig(cacheNames = "user")
 public class UserServiceImpl implements UserService {
-    @Value("${code.expiration}")
-    private Long expiration;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleMapper roleMapper;
@@ -59,6 +59,8 @@ public class UserServiceImpl implements UserService {
     private final TeamRepository teamRepository;
     private final FightingCapacityRepository fightingCapacityRepository;
     private final RegistrationInfoRepository registrationInfoRepository;
+    @Value("${code.expiration}")
+    private Long expiration;
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleMapper roleMapper, RoleService roleService, JavaMailSender javaMailSender, SecurityProperties securityProperties, RedisUtils redisUtils, MatchResultRepository matchResultRepository, TeamMapper teamMapper, TeamRepository teamRepository, FightingCapacityRepository fightingCapacityRepository, RegistrationInfoRepository registrationInfoRepository) {
         this.userRepository = userRepository;
@@ -80,6 +82,7 @@ public class UserServiceImpl implements UserService {
      * @return 用户 DTO
      */
     @Override
+    @Cacheable
     public UserDto findByUserNumber(String userNumber) {
         UserEntity userEntity = userRepository.findByUserNumber(userNumber);
         if (userEntity != null) {
@@ -96,11 +99,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public void saveUser(List<Object> user) {
-        UserEntity users = new UserEntity();
+        UserDto users = new UserDto();
         users.setUserNumber((String) user.get(0));
         users.setUserName((String) user.get(1));
-        if (user.get(2) != null) {
+        if (!"".equals(user.get(2))) {
             users.setUserEmail((String) user.get(2));
         }
         if ("学生".equals(user.get(3))) {
@@ -108,7 +112,7 @@ public class UserServiceImpl implements UserService {
         } else if ("老师".equals(user.get(3))) {
             users.setRoleByRoleId(roleMapper.toEntity(roleService.findByRoleName("老师")));
         }
-        userRepository.save(users);
+        userRepository.save(userMapper.toEntity(users));
     }
 
     /**
@@ -119,6 +123,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public void saveUserPortrait(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -131,6 +136,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {@CacheEvict(allEntries = true), @CacheEvict(cacheNames = "team", allEntries = true)})
     public void saveUserNameAndEmail(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -143,6 +149,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public void saveUserPassword(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -155,6 +162,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public void saveUserRole(UserDto userDto) {
         userRepository.save(userMapper.toEntity(userDto));
     }
@@ -165,6 +173,7 @@ public class UserServiceImpl implements UserService {
      * @return 查询结果
      */
     @Override
+    @Cacheable
     public List<UserDto> findUserFightingCapacity() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "userFightingCapacity"));
 
@@ -204,7 +213,7 @@ public class UserServiceImpl implements UserService {
         String uuid = securityProperties.getCodeKey() + IdUtil.simpleUUID();
         redisUtils.set(uuid, userDto.getUserNumber(), expiration, TimeUnit.MINUTES);
         // 邮件内容
-        simpleMailMessage.setText("你的密码重置链接为：" + "http://localhost:8080/role/forget-code?uuid=" + uuid);
+        simpleMailMessage.setText("你的密码重置链接为：" + "https://localhost:8080/role/forget-code?uuid=" + uuid);
 
         javaMailSender.send(simpleMailMessage);
     }
@@ -217,6 +226,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public void forget(String uuid) {
         String userNumber = (String) redisUtils.get(uuid);
         if (userNumber == null) {
@@ -248,6 +258,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {@CacheEvict(allEntries = true), @CacheEvict(cacheNames = "fightingCapacity", allEntries = true), @CacheEvict(cacheNames = "matchResult", allEntries = true), @CacheEvict(cacheNames = "registrationInfo", allEntries = true), @CacheEvict(cacheNames = "team", allEntries = true)})
     public void removeUser(String userNumber) {
         UserDto userDto = findByUserNumber(userNumber);
         fightingCapacityRepository.deleteAll(fightingCapacityRepository.findAllByUserByUserId(userMapper.toEntity(userDto)));
@@ -275,7 +286,8 @@ public class UserServiceImpl implements UserService {
      * @return 查询结果
      */
     @Override
-    public Page<UserDto> findUser(UserDto userDto, int pageSize, int current, String sorter) {
+    @Cacheable
+    public PageUtils<UserDto> findUser(UserDto userDto, int pageSize, int current, String sorter) {
         String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"userFightingCapacity", ""};
         Pageable pageable = descend.equals(sort[1]) ?
@@ -303,8 +315,6 @@ public class UserServiceImpl implements UserService {
 
         Page<UserEntity> data = userRepository.findAll(specification, pageable);
 
-        List<UserDto> list = userMapper.toDto(data.getContent());
-
-        return new PageImpl<>(list, data.getPageable(), data.getTotalElements());
+        return new PageUtils<>(userMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
     }
 }

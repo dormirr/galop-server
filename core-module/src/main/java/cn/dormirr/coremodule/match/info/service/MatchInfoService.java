@@ -1,8 +1,7 @@
 package cn.dormirr.coremodule.match.info.service;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.match.info.service.dto.MatchInfoDto;
-import cn.dormirr.coremodule.match.result.service.dto.MatchResultDto;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public interface MatchInfoService {
      * @param sorter       排序规则
      * @return 查询结果
      */
-    Page<MatchInfoDto> findMatchInfo(MatchInfoDto matchInfoDto, int pageSize, int current, String sorter);
+    PageUtils<MatchInfoDto> findMatchInfo(MatchInfoDto matchInfoDto, int pageSize, int current, String sorter);
 
     /**
      * 根据比赛 ID 查询比赛

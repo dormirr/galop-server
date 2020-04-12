@@ -42,6 +42,7 @@ import java.util.concurrent.Future;
  * @author ZhangTianCi
  */
 @Service
+@CacheConfig(cacheNames = "matchResult")
 public class MatchResultServiceImpl implements MatchResultService {
     private final MatchResultRepository matchResultRepository;
     private final MatchResultMapper matchResultMapper;
@@ -110,7 +111,8 @@ public class MatchResultServiceImpl implements MatchResultService {
      */
     @Override
     @Async
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {@CacheEvict(allEntries = true), @CacheEvict(cacheNames = "announcement", allEntries = true), @CacheEvict(cacheNames = "registrationInfo", allEntries = true), @CacheEvict(cacheNames = "team", allEntries = true), @CacheEvict(cacheNames = "user", allEntries = true), @CacheEvict(cacheNames = "fightingCapacity", allEntries = true)})
     public Future<Integer> saveMatchResult(MultipartFile multipartFile) {
         final int[] count = {0};
         List<MatchResultDto> matchResultDtoList = new ArrayList<>();

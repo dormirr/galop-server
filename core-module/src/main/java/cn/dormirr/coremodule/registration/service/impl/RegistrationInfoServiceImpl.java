@@ -1,5 +1,6 @@
 package cn.dormirr.coremodule.registration.service.impl;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.commonmodule.utils.SecurityUtils;
 import cn.dormirr.coremodule.match.info.service.MatchInfoService;
 import cn.dormirr.coremodule.match.info.service.dto.MatchInfoDto;
@@ -19,7 +20,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
-import org.springframework.data.domain.*;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +35,14 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * @author ZhangTianCi
  */
 @Service
+@CacheConfig(cacheNames = "registrationInfo")
 public class RegistrationInfoServiceImpl implements RegistrationInfoService {
     private final UserService userService;
     private final MatchInfoService matchInfoService;
@@ -65,6 +74,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public boolean saveRegistrationInfo(RegistrationInfoDto registrationInfoDto, Long matchId, Long teamId) {
         MatchInfoDto matchInfoDto = matchInfoService.findId(matchId);
         if (matchInfoDto == null) {
@@ -117,7 +127,8 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      * @return 查询结果
      */
     @Override
-    public Page<RegistrationInfoDto> findRegistrationInfo(RegistrationInfoDto registrationInfoDto, int pageSize, int current, String sorter) {
+    @Cacheable
+    public PageUtils<RegistrationInfoDto> findRegistrationInfo(RegistrationInfoDto registrationInfoDto, int pageSize, int current, String sorter) {
         String descend = "ascend";
         String[] sort = sorter != null ? sorter.replace(",", ".").split("_") : new String[]{"matchInfoByMatchInfoId.id", ""};
         Pageable pageable = descend.equals(sort[1]) ?
@@ -139,11 +150,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
 
         Page<RegistrationInfoEntity> data = registrationInfoRepository.findAll(specification, pageable);
 
-        List<RegistrationInfoDto> list = new ArrayList<>();
-        for (RegistrationInfoEntity registrationInfoEntity : data.getContent()) {
-            list.add(registrationInfoMapper.toDto(registrationInfoEntity));
-        }
-        return new PageImpl<>(list, data.getPageable(), data.getTotalElements());
+        return new PageUtils<>(registrationInfoMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
     }
 
     /**
@@ -154,6 +161,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public boolean saveApplyRegistrationInfo(Long id) {
         String registrationStatusWait = "审核";
         long countWait = registrationInfoRepository.countByIdAndRegistrationStatus(id, registrationStatusWait);
@@ -176,6 +184,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public boolean deleteApplyRegistrationInfo(Long id) {
         String registrationStatusWait = "审核";
         long countWait = registrationInfoRepository.countByIdAndRegistrationStatus(id, registrationStatusWait);
@@ -197,6 +206,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
      * @return 文件地址
      */
     @Override
+    @Cacheable
     public String downloadRegistrationInfo(Long matchId) {
         MatchInfoDto matchInfoDto = matchInfoService.findId(matchId);
         if (matchInfoDto == null) {

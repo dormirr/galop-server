@@ -1,5 +1,6 @@
 package cn.dormirr.commonmodule.config;
 
+import cn.dormirr.commonmodule.utils.SecurityUtils;
 import cn.dormirr.commonmodule.utils.StringUtils;
 import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson.JSON;
@@ -68,9 +69,9 @@ public class RedisConfig extends CachingConfigurerSupport {
 
         // 全局开启AutoType，这里方便开发，使用全局的方式
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
-
         // 建议使用这种方式，小范围指定白名单
-        // ParserConfig.getGlobalInstance().addAccept("me.zhengjie.domain");
+        // ParserConfig.getGlobalInstance().addAccept("org.springframework.data.domain.PageImpl");
+
         // key的序列化采用StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
@@ -86,7 +87,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
-            Map<String, Object> container = new HashMap<>(3);
+            Map<String, Object> container = new HashMap<>(4);
             Class<?> targetClassClass = target.getClass();
 
             // 类地址

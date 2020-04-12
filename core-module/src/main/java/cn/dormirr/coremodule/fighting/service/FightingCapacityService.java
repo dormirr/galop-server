@@ -1,8 +1,8 @@
 package cn.dormirr.coremodule.fighting.service;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.fighting.domain.vo.ChangeMatchRe;
 import cn.dormirr.coremodule.fighting.service.dto.FightingCapacityDto;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ public interface FightingCapacityService {
     /**
      * 动态查询战斗力变化
      *
-     * @param pageSize            每页数量
-     * @param current             第几页
-     * @param sorter              排序规则
+     * @param pageSize 每页数量
+     * @param current  第几页
+     * @param sorter   排序规则
      * @return 查询结果
      */
-    Page<FightingCapacityDto> findFightingCapacity(int pageSize, int current, String sorter);
+    PageUtils<FightingCapacityDto> findFightingCapacity(int pageSize, int current, String sorter);
 
     /**
      * 查询战斗力变化

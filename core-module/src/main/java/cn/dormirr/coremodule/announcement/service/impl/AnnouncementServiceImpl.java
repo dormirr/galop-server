@@ -1,11 +1,18 @@
 package cn.dormirr.coremodule.announcement.service.impl;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.announcement.domain.AnnouncementEntity;
 import cn.dormirr.coremodule.announcement.repository.AnnouncementRepository;
 import cn.dormirr.coremodule.announcement.service.AnnouncementService;
 import cn.dormirr.coremodule.announcement.service.dto.AnnouncementDto;
 import cn.dormirr.coremodule.announcement.service.mapper.AnnouncementMapper;
-import org.springframework.data.domain.*;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -20,6 +27,7 @@ import java.util.List;
  * @author ZhangTianCi
  */
 @Service
+@CacheConfig(cacheNames = "announcement")
 public class AnnouncementServiceImpl implements AnnouncementService {
     private final AnnouncementRepository announcementRepository;
     private final AnnouncementMapper announcementMapper;
@@ -37,6 +45,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public void saveAnnouncement(AnnouncementDto announcementDto) {
         announcementRepository.save(announcementMapper.toEntity(announcementDto));
     }
@@ -51,7 +60,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      * @return 查询结果
      */
     @Override
-    public Page<AnnouncementDto> findAnnouncement(AnnouncementDto announcementDto, int pageSize, int current, String sorter) {
+    @Cacheable
+    public PageUtils<AnnouncementDto> findAnnouncement(AnnouncementDto announcementDto, int pageSize, int current, String sorter) {
         String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
         Pageable pageable = descend.equals(sort[1]) ?
@@ -75,7 +85,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
         List<AnnouncementDto> list = announcementMapper.toDto(data.getContent());
 
-        return new PageImpl<>(list, data.getPageable(), data.getTotalElements());
+        return new PageUtils<>(list, data.getTotalElements(), data.getTotalPages());
     }
 
     /**
@@ -86,6 +96,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public void deleteAnnouncement(AnnouncementDto announcementDto) {
         announcementRepository.deleteById(announcementDto.getId());
     }
@@ -98,6 +109,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public void saveApplyAnnouncement(AnnouncementDto announcementDto) {
         announcementRepository.save(announcementMapper.toEntity(announcementDto));
     }
@@ -109,6 +121,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      * @return 查询结果
      */
     @Override
+    @Cacheable
     public AnnouncementDto findOneAnnouncement(AnnouncementDto announcementDto) {
         return announcementRepository.findById(announcementDto.getId()).isPresent() ?
                 announcementMapper.toDto(announcementRepository.findById(announcementDto.getId()).get()) :
@@ -121,6 +134,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      * @return 查询结果
      */
     @Override
+    @Cacheable
     public List<AnnouncementDto> findTenAnnouncement() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createTime"));
 

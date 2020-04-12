@@ -1,7 +1,7 @@
 package cn.dormirr.coremodule.role.service;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -99,5 +99,5 @@ public interface UserService {
      * @param sorter   排序规则
      * @return 查询结果
      */
-    Page<UserDto> findUser(UserDto userDto, int pageSize, int current, String sorter);
+    PageUtils<UserDto> findUser(UserDto userDto, int pageSize, int current, String sorter);
 }

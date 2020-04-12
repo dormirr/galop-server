@@ -1,13 +1,20 @@
 package cn.dormirr.coremodule.role.domain.vo;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.io.Serializable;
 
 /**
  * @author ZhangTianCi
  */
-@Getter
-@Setter
-public class UserPassword {
+public class UserPassword implements Serializable {
     private String userPassword;
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
 }
+
+

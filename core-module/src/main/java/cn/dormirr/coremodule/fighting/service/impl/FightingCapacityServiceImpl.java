@@ -1,5 +1,6 @@
 package cn.dormirr.coremodule.fighting.service.impl;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.commonmodule.utils.SecurityUtils;
 import cn.dormirr.coremodule.fighting.domain.FightingCapacityEntity;
 import cn.dormirr.coremodule.fighting.domain.vo.ChangeMatchRe;
@@ -13,7 +14,12 @@ import cn.dormirr.coremodule.match.info.service.mapper.MatchInfoMapper;
 import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.role.service.mapper.UserMapper;
-import org.springframework.data.domain.*;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +32,7 @@ import java.util.List;
  * @author ZhangTianCi
  */
 @Service
+@CacheConfig(cacheNames = "fightingCapacity")
 public class FightingCapacityServiceImpl implements FightingCapacityService {
     private final UserService userService;
     private final FightingCapacityRepository fightingCapacityRepository;
@@ -46,13 +53,13 @@ public class FightingCapacityServiceImpl implements FightingCapacityService {
     /**
      * 动态查询战斗力变化
      *
-     * @param pageSize            每页数量
-     * @param current             第几页
-     * @param sorter              排序规则
+     * @param pageSize 每页数量
+     * @param current  第几页
+     * @param sorter   排序规则
      * @return 查询结果
      */
     @Override
-    public Page<FightingCapacityDto> findFightingCapacity(int pageSize, int current, String sorter) {
+    public PageUtils<FightingCapacityDto> findFightingCapacity(int pageSize, int current, String sorter) {
         String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"id", ""};
         Pageable pageable = descend.equals(sort[1]) ?
@@ -73,9 +80,7 @@ public class FightingCapacityServiceImpl implements FightingCapacityService {
 
         Page<FightingCapacityEntity> data = fightingCapacityRepository.findAll(specification, pageable);
 
-        List<FightingCapacityDto> list = fightingCapacityMapper.toDto(data.getContent());
-
-        return new PageImpl<>(list, data.getPageable(), data.getTotalElements());
+        return new PageUtils<>(fightingCapacityMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
     }
 
     /**
@@ -108,6 +113,7 @@ public class FightingCapacityServiceImpl implements FightingCapacityService {
      * @return 查询结果
      */
     @Override
+    @Cacheable
     public List<ChangeMatchRe> changeMatch() {
         List<MatchInfoDto> data = matchInfoMapper.toDto(matchInfoRepository.findAll());
 

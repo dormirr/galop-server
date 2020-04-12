@@ -1,11 +1,11 @@
 package cn.dormirr.coremodule.fighting.rest;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.fighting.domain.vo.ChangeFightingCapacityRe;
 import cn.dormirr.coremodule.fighting.domain.vo.ChangeMatchRe;
 import cn.dormirr.coremodule.fighting.domain.vo.FindFightingCapacity;
 import cn.dormirr.coremodule.fighting.service.FightingCapacityService;
 import cn.dormirr.coremodule.fighting.service.dto.FightingCapacityDto;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +42,7 @@ public class FightingCapacityController {
             sorter = findFightingCapacity.getSorter();
         }
 
-        Page<FightingCapacityDto> data = fightingCapacityService.findFightingCapacity(pageSize, current, sorter);
+        PageUtils<FightingCapacityDto> data = fightingCapacityService.findFightingCapacity(pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> result = new HashMap<>(5) {{

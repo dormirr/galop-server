@@ -1,7 +1,7 @@
 package cn.dormirr.coremodule.team.service.impl;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.commonmodule.utils.SecurityUtils;
-import cn.dormirr.coremodule.role.domain.UserEntity;
 import cn.dormirr.coremodule.role.service.RoleService;
 import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.RoleDto;
@@ -13,7 +13,14 @@ import cn.dormirr.coremodule.team.repository.TeamRepository;
 import cn.dormirr.coremodule.team.service.TeamService;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
 import cn.dormirr.coremodule.team.service.mapper.TeamMapper;
-import org.springframework.data.domain.*;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -28,6 +35,7 @@ import java.util.List;
  * @author ZhangTianCi
  */
 @Service
+@CacheConfig(cacheNames = "team")
 public class TeamServiceImpl implements TeamService {
     private final UserService userService;
     private final RoleService roleService;
@@ -54,6 +62,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public void saveTeam(TeamDto teamDto, UserDto userDto) {
         RoleDto roleDto = roleService.findByRoleName("队长");
 
@@ -77,7 +86,8 @@ public class TeamServiceImpl implements TeamService {
      * @return 查询结果
      */
     @Override
-    public Page<TeamDto> findTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
+    @Cacheable
+    public PageUtils<TeamDto> findTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
         String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"teamFightingCapacity", ""};
         Pageable pageable = descend.equals(sort[1]) ?
@@ -116,12 +126,7 @@ public class TeamServiceImpl implements TeamService {
 
         Page<TeamEntity> data = teamRepository.findAll(specification, pageable);
 
-        List<TeamDto> list = new ArrayList<>();
-        for (
-                TeamEntity teamEntity : data.getContent()) {
-            list.add(teamMapper.toDto(teamEntity));
-        }
-        return new PageImpl<>(list, data.getPageable(), data.getTotalElements());
+        return new PageUtils<>(teamMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
     }
 
     /**
@@ -132,6 +137,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public boolean applyTeam(Long id) {
         UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
         String teamStateError = "拒绝";
@@ -163,7 +169,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 查询结果
      */
     @Override
-    public Page<TeamDto> findApplyTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
+    public PageUtils<TeamDto> findApplyTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
         String descend = "ascend";
         String[] sort = sorter != null ? sorter.replace(",", ".").split("_") : new String[]{"userByUserId.userFightingCapacity", ""};
         Pageable pageable = descend.equals(sort[1]) ?
@@ -215,7 +221,7 @@ public class TeamServiceImpl implements TeamService {
 
         Page<TeamEntity> data = teamRepository.findAll(specification, pageable);
 
-        return new PageImpl<>(teamMapper.toDto(data.getContent()), data.getPageable(), data.getTotalElements());
+        return new PageUtils<>(teamMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
     }
 
     /**
@@ -226,6 +232,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public boolean saveApplyTeam(Long id) {
         String teamStateWait = "审核";
         if (teamRepository.findByIdAndTeamState(id, teamStateWait) != null) {
@@ -246,6 +253,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(allEntries = true)
     public boolean deleteApplyTeam(Long id) {
         String teamStateWait = "审核";
         if (teamRepository.findByIdAndTeamState(id, teamStateWait) != null) {
@@ -265,6 +273,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 查询结果
      */
     @Override
+    @Cacheable
     public TeamDto findId(Long id) {
         return teamRepository.findById(id).isPresent() ? teamMapper.toDto(teamRepository.findById(id).get()) : null;
     }
@@ -279,7 +288,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 查询结果
      */
     @Override
-    public Page<TeamDto> findMyTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
+    public PageUtils<TeamDto> findMyTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
         String descend = "ascend";
         String[] sort = sorter != null ? sorter.split("_") : new String[]{"teamFightingCapacity", ""};
         Pageable pageable = descend.equals(sort[1]) ?
@@ -322,12 +331,7 @@ public class TeamServiceImpl implements TeamService {
 
         Page<TeamEntity> data = teamRepository.findAll(specification, pageable);
 
-        List<TeamDto> list = new ArrayList<>();
-        for (
-                TeamEntity teamEntity : data.getContent()) {
-            list.add(teamMapper.toDto(teamEntity));
-        }
-        return new PageImpl<>(list, data.getPageable(), data.getTotalElements());
+        return new PageUtils<>(teamMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
     }
 
     /**
@@ -338,6 +342,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Async
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {@CacheEvict(allEntries = true), @CacheEvict(cacheNames = "registrationInfo", allEntries = true)})
     public void saveMyTeam(TeamDto teamDto) {
         List<TeamDto> list = teamMapper.toDto(teamRepository.findAllByTeamId(teamDto.getTeamId()));
         for (TeamDto findTeamDto : list) {
@@ -361,7 +366,8 @@ public class TeamServiceImpl implements TeamService {
      * @return 查询结果
      */
     @Override
-    public Page<TeamDto> findOneTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
+    @Cacheable
+    public PageUtils<TeamDto> findOneTeam(TeamDto teamDto, int pageSize, int current, String sorter) {
         String descend = "ascend";
         String[] sort = sorter != null ? sorter.replace(",", ".").split("_") : new String[]{"userByUserId.userFightingCapacity", ""};
         Pageable pageable = descend.equals(sort[1]) ?
@@ -385,6 +391,6 @@ public class TeamServiceImpl implements TeamService {
 
         Page<TeamEntity> data = teamRepository.findAll(specification, pageable);
 
-        return new PageImpl<>(teamMapper.toDto(data.getContent()), data.getPageable(), data.getTotalElements());
+        return new PageUtils<>(teamMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
     }
 }

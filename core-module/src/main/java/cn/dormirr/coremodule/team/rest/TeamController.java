@@ -1,15 +1,13 @@
 package cn.dormirr.coremodule.team.rest;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.commonmodule.utils.SecurityUtils;
-import cn.dormirr.coremodule.role.domain.RoleEntity;
-import cn.dormirr.coremodule.role.domain.UserEntity;
 import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.team.domain.vo.*;
 import cn.dormirr.coremodule.team.service.TeamService;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -68,7 +66,7 @@ public class TeamController {
             sorter = findTeam.getSorter();
         }
 
-        Page<TeamDto> data = teamService.findTeam(teamDto, pageSize, current, sorter);
+        PageUtils<TeamDto> data = teamService.findTeam(teamDto, pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> status = new HashMap<>(5) {{
@@ -127,7 +125,7 @@ public class TeamController {
             sorter = findApplyTeam.getSorter();
         }
 
-        Page<TeamDto> data = teamService.findApplyTeam(teamDto, pageSize, current, sorter);
+        PageUtils<TeamDto> data = teamService.findApplyTeam(teamDto, pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> result = new HashMap<>(5) {{
@@ -210,7 +208,7 @@ public class TeamController {
             sorter = findTeam.getSorter();
         }
 
-        Page<TeamDto> data = teamService.findMyTeam(teamDto, pageSize, current, sorter);
+        PageUtils<TeamDto> data = teamService.findMyTeam(teamDto, pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> status = new HashMap<>(5) {{
@@ -235,7 +233,7 @@ public class TeamController {
             sorter = findOneTeam.getSorter();
         }
 
-        Page<TeamDto> data = teamService.findOneTeam(teamDto, pageSize, current, sorter);
+        PageUtils<TeamDto> data = teamService.findOneTeam(teamDto, pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> status = new HashMap<>(5) {{

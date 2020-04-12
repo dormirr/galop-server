@@ -1,11 +1,11 @@
 package cn.dormirr.coremodule.match.info.rest;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.coremodule.match.info.domain.vo.FindMatchInfo;
 import cn.dormirr.coremodule.match.info.domain.vo.SaveMatchInfo;
 import cn.dormirr.coremodule.match.info.service.MatchInfoService;
 import cn.dormirr.coremodule.match.info.service.dto.MatchInfoDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -64,7 +64,7 @@ public class MatchInfoController {
             sorter = findMatchInfo.getSorter();
         }
 
-        Page<MatchInfoDto> data = matchInfoService.findMatchInfo(matchInfoDto, pageSize, current, sorter);
+        PageUtils<MatchInfoDto> data = matchInfoService.findMatchInfo(matchInfoDto, pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> result = new HashMap<>(5) {{

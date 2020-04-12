@@ -1,11 +1,9 @@
 package cn.dormirr.coremodule.role.rest;
 
 import cn.dormirr.commonmodule.utils.FileUtils;
+import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.commonmodule.utils.SecurityUtils;
-import cn.dormirr.coremodule.role.domain.vo.FindUser;
-import cn.dormirr.coremodule.role.domain.vo.UserNameAndEmail;
-import cn.dormirr.coremodule.role.domain.vo.UserNumber;
-import cn.dormirr.coremodule.role.domain.vo.UserPassword;
+import cn.dormirr.coremodule.role.domain.vo.*;
 import cn.dormirr.coremodule.role.repository.UserRepository;
 import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
@@ -15,7 +13,6 @@ import cn.dormirr.coremodule.security.service.OnlineUserService;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -254,7 +251,7 @@ public class UserController {
             sorter = findUser.getSorter();
         }
 
-        Page<UserDto> data = userService.findUser(userDto, pageSize, current, sorter);
+        PageUtils<UserDto> data = userService.findUser(userDto, pageSize, current, sorter);
 
         // 返回成功信息
         Map<String, Object> status = new HashMap<>(5) {{
