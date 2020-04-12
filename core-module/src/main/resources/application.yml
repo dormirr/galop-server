@@ -1,3 +1,10 @@
+server:
+  ssl:
+    key-store: classpath:galop.keystore
+    key-store-type: PKCS12
+    key-store-password: 123456
+    key-alias: galop
+
 spring:
   datasource:
     druid:
@@ -29,11 +36,25 @@ spring:
       testOnBorrow: true
       testOnReturn: true
 
-#      # 监控
-#      filters: stat,wall,slf4j
+      # 监控
+      stat-view-servlet:
+        enabled: true
+        login-username: admin
+        login-password: 123456
+      filter:
+        stat:
+          enabled: true
+          # 连接堆栈跟踪
+          connection-stack-trace-enable: true
+          db-type: postgresql
+          log-slow-sql: true
+          # 合并不同参数 SQL
+          merge-sql: true
+          # 执行时间大于 1 秒为慢 SQL
+          slow-sql-millis: 1000
+      filters: wall,slf4j
 
   jpa:
-    show-sql: true
     open-in-view: true
     hibernate:
       ddl-auto: update
@@ -42,6 +63,7 @@ spring:
     redis:
       repositories:
         enabled: true
+
   redis:
     # 数据库索引
     database: 0
@@ -50,6 +72,7 @@ spring:
     password:
     # 连接超时时间
     timeout: 5000
+
   servlet:
     multipart:
       enabled: true
