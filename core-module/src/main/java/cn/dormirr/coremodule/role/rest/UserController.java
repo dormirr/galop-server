@@ -171,7 +171,7 @@ public class UserController {
     @PostMapping("/forget")
     public ResponseEntity<Object> forget(@RequestBody UserNumber userNumber) {
         UserDto userDto = userService.findByUserNumber(userNumber.getUserNumber());
-        if (userDto == null || "".equals(userDto.getUserEmail())) {
+        if (userDto == null || userDto.getUserEmail() == null) {
             Map<String, Object> status = new HashMap<>(1) {{
                 put("status", 400);
             }};
