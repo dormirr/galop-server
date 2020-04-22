@@ -1,8 +1,12 @@
 package cn.dormirr.coremodule.role.repository;
 
+import cn.dormirr.coremodule.role.domain.RoleEntity;
 import cn.dormirr.coremodule.role.domain.UserEntity;
+import cn.dormirr.coremodule.role.service.dto.RoleDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.List;
 
 /**
  * @author ZhangTianCi
