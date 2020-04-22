@@ -1,5 +1,7 @@
 package cn.dormirr.coremodule.match.result.service.impl;
 
+import cn.dormirr.commonmodule.utils.PageUtils;
+import cn.dormirr.commonmodule.utils.SecurityUtils;
 import cn.dormirr.coremodule.announcement.repository.AnnouncementRepository;
 import cn.dormirr.coremodule.announcement.service.dto.AnnouncementDto;
 import cn.dormirr.coremodule.announcement.service.mapper.AnnouncementMapper;
@@ -9,14 +11,15 @@ import cn.dormirr.coremodule.fighting.service.mapper.FightingCapacityMapper;
 import cn.dormirr.coremodule.match.info.service.MatchInfoService;
 import cn.dormirr.coremodule.match.info.service.dto.MatchInfoDto;
 import cn.dormirr.coremodule.match.info.service.mapper.MatchInfoMapper;
+import cn.dormirr.coremodule.match.result.domain.MatchResultEntity;
 import cn.dormirr.coremodule.match.result.repository.MatchResultRepository;
 import cn.dormirr.coremodule.match.result.service.MatchResultService;
 import cn.dormirr.coremodule.match.result.service.dto.MatchResultDto;
 import cn.dormirr.coremodule.match.result.service.mapper.MatchResultMapper;
 import cn.dormirr.coremodule.role.repository.UserRepository;
+import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
 import cn.dormirr.coremodule.role.service.mapper.UserMapper;
-import cn.dormirr.coremodule.team.domain.TeamEntity;
 import cn.dormirr.coremodule.team.repository.TeamRepository;
 import cn.dormirr.coremodule.team.service.TeamService;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
@@ -28,19 +31,26 @@ import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Future;
 
 /**
@@ -62,8 +72,9 @@ public class MatchResultServiceImpl implements MatchResultService {
     private final UserRepository userRepository;
     private final AnnouncementRepository announcementRepository;
     private final AnnouncementMapper announcementMapper;
+    private final UserService userService;
 
-    public MatchResultServiceImpl(MatchResultRepository matchResultRepository, MatchResultMapper matchResultMapper, MatchInfoService matchInfoService, TeamService teamService, MatchInfoMapper matchInfoMapper, TeamMapper teamMapper, TeamRepository teamRepository, UserMapper userMapper, FightingCapacityRepository fightingCapacityRepository, FightingCapacityMapper fightingCapacityMapper, UserRepository userRepository, AnnouncementRepository announcementRepository, AnnouncementMapper announcementMapper) {
+    public MatchResultServiceImpl(MatchResultRepository matchResultRepository, MatchResultMapper matchResultMapper, MatchInfoService matchInfoService, TeamService teamService, MatchInfoMapper matchInfoMapper, TeamMapper teamMapper, TeamRepository teamRepository, UserMapper userMapper, FightingCapacityRepository fightingCapacityRepository, FightingCapacityMapper fightingCapacityMapper, UserRepository userRepository, AnnouncementRepository announcementRepository, AnnouncementMapper announcementMapper, UserService userService) {
         this.matchResultRepository = matchResultRepository;
         this.matchResultMapper = matchResultMapper;
         this.matchInfoService = matchInfoService;
@@ -77,6 +88,7 @@ public class MatchResultServiceImpl implements MatchResultService {
         this.userRepository = userRepository;
         this.announcementRepository = announcementRepository;
         this.announcementMapper = announcementMapper;
+        this.userService = userService;
     }
 
     /**
@@ -106,6 +118,46 @@ public class MatchResultServiceImpl implements MatchResultService {
         writer.write(rows, true);
         writer.close();
         return reFileName;
+    }
+
+    /**
+     * 查询比赛结果
+     *
+     * @param pageSize 每页数量
+     * @param current  第几页
+     * @param sorter   排序规则
+     * @return 查询结果
+     */
+    @Override
+    @Cacheable
+    public PageUtils<MatchResultDto> findMatchResult(int pageSize, int current, String sorter) {
+        String descend = "ascend";
+        String[] sort = sorter != null ? sorter.replace(",", ".").split("_") : new String[]{"createTime", ""};
+        Pageable pageable = descend.equals(sort[1]) ?
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
+
+        UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
+        List<TeamDto> teamDtoList = teamMapper.toDto(teamRepository.findAllByUserByUserId(userMapper.toEntity(userDto)));
+
+        Specification<MatchResultEntity> specification = (Specification<MatchResultEntity>) (root, criteriaQuery, criteriaBuilder) -> {
+            ArrayList<Predicate> orQuery = new ArrayList<>();
+
+            if (teamDtoList != null) {
+                Path<Long> teamByTeamId = root.get("teamByTeamId");
+                for (TeamDto teamDto : teamDtoList) {
+                    Predicate teamByTeamIdEqual = criteriaBuilder.equal(teamByTeamId, teamMapper.toEntity(teamDto));
+                    orQuery.add(teamByTeamIdEqual);
+                }
+            }
+
+            Predicate[] andPredicates = orQuery.toArray(new Predicate[0]);
+            return criteriaBuilder.or(andPredicates);
+        };
+
+        Page<MatchResultEntity> data = matchResultRepository.findAll(specification, pageable);
+
+        return new PageUtils<>(matchResultMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
     }
 
     /**
@@ -153,7 +205,7 @@ public class MatchResultServiceImpl implements MatchResultService {
                     List<TeamDto> listUser = teamMapper.toDto(teamRepository.findAllByUserByUserId(teamUserDto.getUserByUserId()));
                     for (TeamDto teamUser : listUser) {
                         List<TeamDto> team = teamMapper.toDto(teamRepository.findAllByTeamId(teamUser.getTeamId()));
-                        for (TeamDto teamDto1:team){
+                        for (TeamDto teamDto1 : team) {
                             teamDto1.setTeamFightingCapacity(teamDto1.getTeamFightingCapacity() + reward);
                             teamRepository.save(teamMapper.toEntity(teamDto1));
                         }
@@ -164,7 +216,7 @@ public class MatchResultServiceImpl implements MatchResultService {
                     List<TeamDto> listUser = teamMapper.toDto(teamRepository.findAllByUserByUserId(teamUserDto.getUserByUserId()));
                     for (TeamDto teamUser : listUser) {
                         List<TeamDto> team = teamMapper.toDto(teamRepository.findAllByTeamId(teamUser.getTeamId()));
-                        for (TeamDto teamDto1:team){
+                        for (TeamDto teamDto1 : team) {
                             if (teamDto1.getTeamFightingCapacity() >= 0) {
                                 continue;
                             }
