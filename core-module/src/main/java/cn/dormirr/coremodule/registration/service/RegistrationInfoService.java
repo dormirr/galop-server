@@ -52,4 +52,15 @@ public interface RegistrationInfoService {
      * @return 文件地址
      */
     String downloadRegistrationInfo(Long matchId);
+
+    /**
+     * 动态查询我的申请
+     *
+     * @param registrationInfoDto 查询条件
+     * @param pageSize            每页数量
+     * @param current             第几页
+     * @param sorter              排序规则
+     * @return 查询结果
+     */
+    PageUtils<RegistrationInfoDto> findMyRegistrationInfo(RegistrationInfoDto registrationInfoDto, int pageSize, int current, String sorter);
 }

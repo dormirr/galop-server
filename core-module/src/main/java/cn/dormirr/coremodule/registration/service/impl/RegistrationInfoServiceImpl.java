@@ -12,6 +12,7 @@ import cn.dormirr.coremodule.registration.service.dto.RegistrationInfoDto;
 import cn.dormirr.coremodule.registration.service.mapper.RegistrationInfoMapper;
 import cn.dormirr.coremodule.role.service.UserService;
 import cn.dormirr.coremodule.role.service.dto.UserDto;
+import cn.dormirr.coremodule.role.service.mapper.UserMapper;
 import cn.dormirr.coremodule.team.repository.TeamRepository;
 import cn.dormirr.coremodule.team.service.TeamService;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
@@ -35,6 +36,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -52,8 +54,9 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
     private final MatchInfoMapper matchInfoMapper;
     private final TeamMapper teamMapper;
     private final TeamRepository teamRepository;
+    private final UserMapper userMapper;
 
-    public RegistrationInfoServiceImpl(UserService userService, MatchInfoService matchInfoService, TeamService teamService, RegistrationInfoRepository registrationInfoRepository, RegistrationInfoMapper registrationInfoMapper, MatchInfoMapper matchInfoMapper, TeamMapper teamMapper, TeamRepository teamRepository) {
+    public RegistrationInfoServiceImpl(UserService userService, MatchInfoService matchInfoService, TeamService teamService, RegistrationInfoRepository registrationInfoRepository, RegistrationInfoMapper registrationInfoMapper, MatchInfoMapper matchInfoMapper, TeamMapper teamMapper, TeamRepository teamRepository, UserMapper userMapper) {
         this.userService = userService;
         this.matchInfoService = matchInfoService;
         this.teamService = teamService;
@@ -62,6 +65,7 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
         this.matchInfoMapper = matchInfoMapper;
         this.teamMapper = teamMapper;
         this.teamRepository = teamRepository;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -227,8 +231,15 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
             return null;
         }
 
+        List<Integer> seatNumber = new ArrayList<>();
+        for (int i = registrationInfoDtoList.size(); i > 0; i--) {
+            seatNumber.add(i);
+        }
+        Collections.shuffle(seatNumber);
+
         List<List<String>> rows = new ArrayList<>();
-        rows.add(CollUtil.newArrayList("团队 ID", "团队名称", "团队简介", "团队战斗力", "学号", "姓名"));
+        rows.add(CollUtil.newArrayList("团队 ID", "团队名称", "团队简介", "团队战斗力", "学号", "姓名", "座位号"));
+        int count = 0;
         for (RegistrationInfoDto registrationInfoDto : registrationInfoDtoList) {
             List<TeamDto> list = teamMapper.toDto(teamRepository.findAllByTeamId(registrationInfoDto.getTeamByTeamId().getTeamId()));
             for (TeamDto teamDto : list) {
@@ -238,19 +249,72 @@ public class RegistrationInfoServiceImpl implements RegistrationInfoService {
                         teamDto.getTeamProfile(),
                         teamDto.getTeamFightingCapacity().toString(),
                         teamDto.getUserByUserId().getUserNumber(),
-                        teamDto.getUserByUserId().getUserName()
+                        teamDto.getUserByUserId().getUserName(),
+                        seatNumber.get(count).toString()
                 );
                 rows.add(row);
             }
+            ++count;
         }
 
         String reFileName = IdUtil.fastSimpleUUID() + ".xlsx";
         String fileName = "D:\\IdeaProjects\\galop-server\\file\\" + reFileName;
         File file = new File(fileName);
         BigExcelWriter writer = ExcelUtil.getBigWriter(file);
-        writer.merge(5, matchInfoDto.getMatchName());
+        writer.merge(6, matchInfoDto.getMatchName());
         writer.write(rows, true);
         writer.close();
         return reFileName;
+    }
+
+    /**
+     * 动态查询我的申请
+     *
+     * @param registrationInfoDto 查询条件
+     * @param pageSize            每页数量
+     * @param current             第几页
+     * @param sorter              排序规则
+     * @return 查询结果
+     */
+    @Override
+    @Cacheable
+    public PageUtils<RegistrationInfoDto> findMyRegistrationInfo(RegistrationInfoDto registrationInfoDto, int pageSize, int current, String sorter) {
+        String descend = "ascend";
+        String[] sort = sorter != null ? sorter.replace(",", ".").split("_") : new String[]{"matchInfoByMatchInfoId.id", ""};
+        Pageable pageable = descend.equals(sort[1]) ?
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, sort[0])) :
+                PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, sort[0]));
+
+        UserDto userDto = userService.findByUserNumber(SecurityUtils.getUsername());
+        List<TeamDto> teamDtoList = teamMapper.toDto(teamRepository.findAllByUserByUserId(userMapper.toEntity(userDto)));
+
+        Specification<RegistrationInfoEntity> specification = (Specification<RegistrationInfoEntity>) (root, criteriaQuery, criteriaBuilder) -> {
+            ArrayList<Predicate> andQuery = new ArrayList<>();
+            ArrayList<Predicate> orQuery = new ArrayList<>();
+
+            if (teamDtoList != null) {
+                Path<Long> teamByTeamId = root.get("teamByTeamId");
+                for (TeamDto teamDto : teamDtoList) {
+                    Predicate teamByTeamIdEqual = criteriaBuilder.equal(teamByTeamId, teamMapper.toEntity(teamDto));
+                    orQuery.add(teamByTeamIdEqual);
+                }
+            }
+
+            if (registrationInfoDto.getRegistrationStatus() != null) {
+                Path<String> registrationStatus = root.get("registrationStatus");
+                Predicate registrationStatusLike = criteriaBuilder.like(registrationStatus, "%" + registrationInfoDto.getRegistrationStatus() + "%");
+                andQuery.add(registrationStatusLike);
+            }
+
+            Predicate[] andPredicates = andQuery.toArray(new Predicate[0]);
+            Predicate[] orPredicates = orQuery.toArray(new Predicate[0]);
+
+            Predicate[] predicates = {criteriaBuilder.and(andPredicates), criteriaBuilder.or(orPredicates)};
+            return criteriaBuilder.and(predicates);
+        };
+
+        Page<RegistrationInfoEntity> data = registrationInfoRepository.findAll(specification, pageable);
+
+        return new PageUtils<>(registrationInfoMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
     }
 }

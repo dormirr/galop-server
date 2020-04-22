@@ -158,4 +158,31 @@ public class RegistrationInfoController {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/find-my-registration-info")
+    @PreAuthorize("hasAnyAuthority('学生')")
+    public ResponseEntity<Object> findMyRegistrationInfo(FindRegistrationInfo findRegistrationInfo) {
+        RegistrationInfoDto registrationInfoDto = new RegistrationInfoDto();
+        if (findRegistrationInfo.getRegistrationStatus() != null) {
+            registrationInfoDto.setRegistrationStatus(findRegistrationInfo.getRegistrationStatus());
+        }
+        int pageSize = findRegistrationInfo.getPageSize();
+        int current = findRegistrationInfo.getCurrent();
+        String sorter = null;
+        if (!"".equals(findRegistrationInfo.getSorter())) {
+            sorter = findRegistrationInfo.getSorter();
+        }
+
+        PageUtils<RegistrationInfoDto> data = registrationInfoService.findMyRegistrationInfo(registrationInfoDto, pageSize, current, sorter);
+
+        // 返回成功信息
+        Map<String, Object> result = new HashMap<>(5) {{
+            put("status", 200);
+            put("data", data.getContent());
+            put("total", data.getTotalElements());
+            put("current", data.getTotalPages());
+            put("pageSize", pageSize);
+        }};
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
