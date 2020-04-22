@@ -100,4 +100,11 @@ public interface UserService {
      * @return 查询结果
      */
     PageUtils<UserDto> findUser(UserDto userDto, int pageSize, int current, String sorter);
+
+    /**
+     * 导出用户 excel
+     *
+     * @return 用户数据 Excel 文件名
+     */
+    String downloadRole();
 }

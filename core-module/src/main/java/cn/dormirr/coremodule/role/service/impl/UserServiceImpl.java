@@ -18,7 +18,10 @@ import cn.dormirr.coremodule.security.config.SecurityProperties;
 import cn.dormirr.coremodule.team.repository.TeamRepository;
 import cn.dormirr.coremodule.team.service.dto.TeamDto;
 import cn.dormirr.coremodule.team.service.mapper.TeamMapper;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.poi.excel.BigExcelWriter;
+import cn.hutool.poi.excel.ExcelUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -316,5 +320,56 @@ public class UserServiceImpl implements UserService {
         Page<UserEntity> data = userRepository.findAll(specification, pageable);
 
         return new PageUtils<>(userMapper.toDto(data.getContent()), data.getTotalElements(), data.getTotalPages());
+    }
+
+    /**
+     * 导出用户 excel
+     *
+     * @return 用户数据 Excel 文件名
+     */
+    @Override
+    @Cacheable
+    public String downloadRole() {
+        RoleDto roleDto = roleService.findByRoleName("学生");
+
+        Specification<UserEntity> specification = (Specification<UserEntity>) (root, criteriaQuery, criteriaBuilder) -> {
+            ArrayList<Predicate> andQuery = new ArrayList<>();
+
+            Path<Long> roleByRoleId = root.get("roleByRoleId");
+            Predicate roleByRoleIdEqual = criteriaBuilder.equal(roleByRoleId, roleMapper.toEntity(roleDto));
+            andQuery.add(roleByRoleIdEqual);
+
+            Predicate[] andPredicates = andQuery.toArray(new Predicate[0]);
+            return criteriaBuilder.and(andPredicates);
+        };
+        List<UserDto> userDtoList = userMapper.toDto(userRepository.findAll(specification, Sort.by(Sort.Direction.DESC, "userFightingCapacity")));
+
+        if (userDtoList.size() == 0) {
+            return null;
+        }
+
+        int count = 1;
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(CollUtil.newArrayList("学号", "姓名", "战斗力", "排名"));
+        for (UserDto userDto : userDtoList) {
+            List<String> row = CollUtil.newArrayList(
+                    userDto.getUserNumber(),
+                    userDto.getUserName(),
+                    userDto.getUserFightingCapacity().toString(),
+                    Integer.toString(count)
+            );
+            rows.add(row);
+            ++count;
+        }
+
+
+        String reFileName = IdUtil.fastSimpleUUID() + ".xlsx";
+        String fileName = "D:\\IdeaProjects\\galop-server\\file\\" + reFileName;
+        File file = new File(fileName);
+        BigExcelWriter writer = ExcelUtil.getBigWriter(file);
+        writer.merge(3, "用户战斗力排行榜");
+        writer.write(rows, true);
+        writer.close();
+        return reFileName;
     }
 }

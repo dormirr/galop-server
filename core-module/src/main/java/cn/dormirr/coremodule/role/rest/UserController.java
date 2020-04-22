@@ -3,6 +3,7 @@ package cn.dormirr.coremodule.role.rest;
 import cn.dormirr.commonmodule.utils.FileUtils;
 import cn.dormirr.commonmodule.utils.PageUtils;
 import cn.dormirr.commonmodule.utils.SecurityUtils;
+import cn.dormirr.coremodule.registration.domain.vo.DownloadRegistrationInfo;
 import cn.dormirr.coremodule.role.domain.vo.*;
 import cn.dormirr.coremodule.role.repository.UserRepository;
 import cn.dormirr.coremodule.role.service.UserService;
@@ -279,5 +280,31 @@ public class UserController {
         }};
 
         return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("/download-role")
+    @PreAuthorize("hasAnyAuthority('老师')")
+    public ResponseEntity<Object> downloadRole() {
+        String fileName = userService.downloadRole();
+        if (fileName != null) {
+            Map<String, Object> result = new HashMap<>(3) {
+                {
+                    put("code", 201);
+                    put("success", true);
+                    put("message", "成功导出用户数据表！");
+                    put("download", fileName);
+                }
+            };
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        } else {
+            Map<String, Object> result = new HashMap<>(3) {
+                {
+                    put("code", 400);
+                    put("success", false);
+                    put("message", "无数据！");
+                }
+            };
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
     }
 }
