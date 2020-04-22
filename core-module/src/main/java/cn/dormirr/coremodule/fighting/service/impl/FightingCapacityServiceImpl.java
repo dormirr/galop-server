@@ -115,7 +115,7 @@ public class FightingCapacityServiceImpl implements FightingCapacityService {
     @Override
     @Cacheable
     public List<ChangeMatchRe> changeMatch() {
-        List<MatchInfoDto> data = matchInfoMapper.toDto(matchInfoRepository.findAll());
+        List<MatchInfoDto> data = matchInfoMapper.toDto(matchInfoRepository.findAll(Sort.by(Sort.Direction.ASC,"startTime")));
 
         if (data == null) {
             return null;
