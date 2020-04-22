@@ -1024,7 +1024,7 @@ CREATE TABLE galop."userEntity" (
     user_name character varying(24) NOT NULL,
     user_password character varying(172) DEFAULT '$2a$10$vE9HsVXW3aWQM1bbeojfB.aaFHS19Ts7C/GWjgCE3Gs8Escp/3/om'::character varying NOT NULL,
     user_email character varying(320),
-    user_portrait character varying(2083) DEFAULT 'http://localhost:8080/avatar/avatar.png'::character varying NOT NULL,
+    user_portrait character varying(2083) DEFAULT 'https://localhost:8080/avatar/avatar.png'::character varying NOT NULL,
     role_id bigint NOT NULL,
     user_fighting_capacity integer DEFAULT 0 NOT NULL
 );
