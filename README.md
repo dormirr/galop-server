@@ -10,7 +10,7 @@
 
 [前端地址](https://github.com/dormirr/galop-web)
 
-[系统设计详细介绍](https://www.zhangtianci.cn/archives/xue-ke-jing-sai-xun-lian-guan-li-xi-tong)
+[系统设计详细介绍](https://www.zhangtianci.cn/archives/discipline-competition-training-management-system)
 
 # 系统介绍
 
