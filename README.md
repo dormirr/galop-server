@@ -10,13 +10,13 @@
 
 [前端地址](https://github.com/dormirr/galop-web)
 
-[系统设计详细介绍](https://www.zhangtianci.cn/archives/discipline-competition-training-management-system)
+[系统设计详细介绍](https://www.zhangtianci.cn/discipline-competition-training-management-system)
 
 # 系统介绍
 
 针对目前高校举办学科竞赛所遇到的问题，本系统主要设计六个模块，分别是通知模块、战斗力模块、比赛模块、报名模块、角色模块和团队模块。
 
-![系统架构图](https://www.zhangtianci.cn/upload/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%9B%BE.webp)
+![系统架构图](https://anytype-prod-publishserver.s3.eu-central-2.amazonaws.com/67b1f0a97515b92dc53445a5/files/xi-tong-jia-gou-tu.webp)
 
 # 安装与使用教程
 
